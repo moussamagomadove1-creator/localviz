@@ -61,20 +61,16 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date(), leadsCount: leadsStore.length });
 });
 
-// Schedule the scraper to run every 24 hours at 3:00 AM
-cron.schedule('0 3 * * *', () => {
-  console.log('Running daily scheduled scraper...');
-  
-  // List of default targets to scan daily
-  const targets = [
-    { city: 'Paris', category: 'Plumber' },
-    { city: 'Lyon', category: 'Bakery' },
-    { city: 'Marseille', category: 'Garage' },
-    // Add more as needed
-  ];
-  
-  runScraperQueue(targets).catch(console.error);
-});
+// Cron disabled on free tier (512MB RAM limit)
+// Uncomment on a paid plan with more memory
+// cron.schedule('0 3 * * *', () => {
+//   console.log('Running daily scheduled scraper...');
+//   const targets = [
+//     { city: 'Paris', category: 'Plumber' },
+//     { city: 'Lyon', category: 'Bakery' },
+//   ];
+//   runScraperQueue(targets).catch(console.error);
+// });
 
 app.listen(PORT, () => {
   console.log(`Scraper service running on port ${PORT}`);

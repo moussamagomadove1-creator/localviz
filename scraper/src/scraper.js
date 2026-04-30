@@ -260,12 +260,18 @@ function saveLeadRealtime(newLead) {
 // ============================================================
 async function scrapeGoogleMaps(city, category, limit = 15) {
   const isWholeFrance = city.toLowerCase().trim() === 'france';
-  const subZones = isWholeFrance ? ['France'] : generateSubZones(city);
+  const isServer = !!process.env.PUPPETEER_EXECUTABLE_PATH;
+
+  // On free tier (512MB RAM), skip sub-zones to save memory
+  const subZones = isServer ? [city] : (isWholeFrance ? ['France'] : generateSubZones(city));
+  // Cap limit on server to avoid OOM
+  if (isServer && limit > 20) limit = 20;
 
   console.log(`\n${'='.repeat(60)}`);
   console.log(`🔍 Starting scrape for: ${category} in ${city}`);
   console.log(`   Sub-zones to search: ${subZones.length}`);
   console.log(`   Deep scan limit: ${limit} profiles`);
+  console.log(`   Server mode: ${isServer}`);
   console.log(`${'='.repeat(60)}`);
 
   const userAgent = new UserAgent({ deviceCategory: 'desktop' });
@@ -281,12 +287,14 @@ async function scrapeGoogleMaps(city, category, limit = 15) {
     ]
   };
   // Use the Chrome installed in Docker if available
-  if (process.env.PUPPETEER_EXECUTABLE_PATH) {
+  if (isServer) {
     launchOptions.executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
   }
   const browser = await puppeteer.launch(launchOptions);
 
   const page = await browser.newPage();
+  // Smaller viewport = less memory
+  await page.setViewport({ width: 1024, height: 768 });
   await page.setUserAgent(userAgent.toString());
   const context = browser.defaultBrowserContext();
   await context.overridePermissions('https://www.google.com', ['geolocation']);
@@ -335,7 +343,11 @@ async function scrapeGoogleMaps(city, category, limit = 15) {
       await delay(2000);
 
       // Scroll to load all results for this zone
-      await scrollToLoadAll(page);
+      try {
+        await scrollToLoadAll(page);
+      } catch(scrollErr) {
+        console.log('   ⚠️ Scroll error (continuing):', scrollErr.message);
+      }
 
       // Extract business links
       const zoneBusinesses = await extractBusinessLinks(page);
