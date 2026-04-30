@@ -9,24 +9,30 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (e) => {
+  const handleAuth = async (e, isSignUp = false) => {
     e.preventDefault();
     setLoading(true);
-    
-    // For the demo, bypass Supabase auth if using the admin email
-    if (email === 'admin@localviz.com') {
-      localStorage.setItem('localviz_user', JSON.stringify({ email: 'admin@localviz.com', role: 'admin' }));
-      window.location.href = '/dashboard';
-      return;
-    }
 
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) alert(error.message);
-      else window.location.href = '/dashboard';
+      let result;
+      if (isSignUp) {
+        result = await supabase.auth.signUp({ email, password });
+        if (result.data?.user && result.data?.user?.identities?.length === 0) {
+           alert("This email is already registered. Try signing in.");
+        } else if (result.error) {
+           alert(result.error.message);
+        } else {
+           alert("Registration successful! You are now signed in.");
+           window.location.href = '/dashboard';
+        }
+      } else {
+        result = await supabase.auth.signInWithPassword({ email, password });
+        if (result.error) alert(result.error.message);
+        else window.location.href = '/dashboard';
+      }
     } catch (err) {
       console.error(err);
-      alert("An error occurred during login.");
+      alert("An error occurred during authentication.");
     }
     setLoading(false);
   };
@@ -68,9 +74,14 @@ export default function Login() {
               required
             />
           </div>
-          <button type="submit" className={`btn-primary ${styles.submitBtn}`} disabled={loading}>
-            {loading ? 'Signing in...' : 'Sign in'}
-          </button>
+          <div style={{ display: 'flex', gap: '10px', marginTop: '1rem' }}>
+            <button type="button" onClick={(e) => handleAuth(e, false)} className={`btn-primary ${styles.submitBtn}`} disabled={loading} style={{ flex: 1 }}>
+              {loading ? 'Wait...' : 'Sign In'}
+            </button>
+            <button type="button" onClick={(e) => handleAuth(e, true)} className={`btn-secondary ${styles.submitBtn}`} disabled={loading} style={{ flex: 1 }}>
+              Sign Up
+            </button>
+          </div>
         </form>
 
         <div className={styles.divider}>OR</div>

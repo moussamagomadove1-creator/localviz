@@ -1,8 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const fs = require('fs');
-const path = require('path');
+const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -10,16 +9,11 @@ const PORT = process.env.PORT || 4000;
 app.use(cors());
 app.use(express.json({ limit: '5mb' }));
 
-// In-memory leads storage (loaded from file on start if available)
-let leadsStore = [];
-try {
-  const demoPath = path.join(__dirname, 'leads_data.json');
-  if (fs.existsSync(demoPath)) {
-    leadsStore = JSON.parse(fs.readFileSync(demoPath, 'utf8'));
-  }
-} catch(e) {
-  console.log('No existing leads file, starting fresh.');
-}
+// Initialize Supabase
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_KEY
+);
 
 // ============================================================
 // JOB QUEUE - Website creates jobs, local PC executes them
@@ -28,15 +22,18 @@ let jobQueue = [];
 let jobIdCounter = 1;
 
 // Website calls this to start a scan → creates a job for the local worker
-app.post('/api/scrape', (req, res) => {
+app.post('/api/scrape', async (req, res) => {
   const { city, category, limit, userId } = req.body;
   if (!city || !category) {
     return res.status(400).json({ error: 'City and category are required' });
   }
   
-  // Find existing leads for this user to avoid duplicates
-  const userLeads = userId ? leadsStore.filter(l => l.userId === userId) : [];
-  const existingNames = userLeads.map(l => l.name);
+  // Find existing leads for this user to avoid duplicates by querying Supabase
+  let existingNames = [];
+  if (userId) {
+    const { data } = await supabase.from('leads').select('name').eq('user_id', userId);
+    if (data) existingNames = data.map(d => d.name);
+  }
 
   const job = {
     id: jobIdCounter++,
@@ -67,7 +64,7 @@ app.get('/api/jobs/pending', (req, res) => {
 });
 
 // Local worker calls this when a job is done
-app.post('/api/jobs/:id/complete', (req, res) => {
+app.post('/api/jobs/:id/complete', async (req, res) => {
   const jobId = parseInt(req.params.id);
   const { count, leads } = req.body;
   const job = jobQueue.find(j => j.id === jobId);
@@ -78,21 +75,23 @@ app.post('/api/jobs/:id/complete', (req, res) => {
   console.log(`✅ Job #${job.id} completed: ${job.count} leads found`);
 
   // Add leads to store, attaching the userId
-  if (leads && Array.isArray(leads)) {
-    let added = 0;
-    for (const lead of leads) {
-      if (!leadsStore.some(e => e.name === lead.name && e.city === lead.city && e.userId === job.userId)) {
-        lead.userId = job.userId;
-        leadsStore.unshift(lead);
-        added++;
-      }
+  if (leads && Array.isArray(leads) && leads.length > 0) {
+    const leadsToInsert = leads.map(l => ({
+      user_id: job.userId,
+      name: l.name,
+      city: l.city,
+      category: l.category || job.category,
+      phone: l.phone || null,
+      rating: l.rating || null,
+      url: l.url || null
+    }));
+
+    const { error } = await supabase.from('leads').insert(leadsToInsert);
+    if (error) {
+      console.error("❌ Failed to save leads to Supabase:", error.message);
+    } else {
+      console.log(`💾 ${leadsToInsert.length} new leads saved for user ${job.userId} in Supabase`);
     }
-    if (added > 0) {
-      try {
-        fs.writeFileSync(path.join(__dirname, 'leads_data.json'), JSON.stringify(leadsStore, null, 2));
-      } catch(e) {}
-    }
-    console.log(`💾 ${added} new leads saved for user ${job.userId} (total: ${leadsStore.length})`);
   }
 
   res.json({ message: 'Job completed', count: job.count });
@@ -107,13 +106,14 @@ app.get('/api/jobs/:id/status', (req, res) => {
 });
 
 // API route to get all leads
-app.get('/api/leads', (req, res) => {
+app.get('/api/leads', async (req, res) => {
   const userId = req.query.userId;
   if (userId) {
-    res.json(leadsStore.filter(l => l.userId === userId));
+    const { data, error } = await supabase.from('leads').select('*').eq('user_id', userId).order('created_at', { ascending: false });
+    if (error) return res.status(500).json({ error: error.message });
+    res.json(data || []);
   } else {
-    // Legacy support or admin
-    res.json(leadsStore);
+    res.json([]);
   }
 });
 

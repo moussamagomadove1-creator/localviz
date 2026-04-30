@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { supabase } from '../../utils/supabase/client';
 import styles from './dashboard.module.css';
 
 // SVG Icons
@@ -84,19 +85,25 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    let currentUid = null;
-    // Check if user is admin to grant Pro access
-    const userStr = localStorage.getItem('localviz_user');
-    if (userStr) {
-      try {
-        const user = JSON.parse(userStr);
-        currentUid = user.email;
-        setUserId(user.email);
-        if (user.email === 'admin@localviz.com' || user.role === 'admin') {
-          setIsPro(true);
-        }
-      } catch (e) {}
-    }
+    const checkUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        window.location.href = '/login';
+        return;
+      }
+      const user = session.user;
+      currentUid = user.id;
+      setUserId(user.id);
+      
+      // Check Pro status if needed (mocked for now, or check user metadata)
+      if (user.email === 'admin@localviz.com') {
+        setIsPro(true);
+      }
+      
+      fetchRealData(false, currentUid);
+    };
+
+    checkUser();
 
     // Load saved leads from localStorage
     const stored = localStorage.getItem('localviz_saved_leads');
@@ -114,7 +121,7 @@ export default function Dashboard() {
       } catch (e) {}
     }
 
-    fetchRealData(false, currentUid);
+    // Note: fetchRealData is now called inside checkUser()
   }, []);
 
   const viewResults = async () => {
@@ -567,9 +574,9 @@ export default function Dashboard() {
           <div className={`${styles.navItem} ${currentView === 'billing' ? styles.active : ''}`} onClick={() => {setCurrentView('billing'); setIsMobileMenuOpen(false);}}>
             <Icons.CreditCard /> Billing
           </div>
-          <Link href="/" className={styles.navItem} style={{ marginTop: 'auto', opacity: 0.7 }}>
+          <button onClick={async () => { await supabase.auth.signOut(); window.location.href='/'; }} className={styles.navItem} style={{ marginTop: 'auto', opacity: 0.7, background: 'transparent', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer' }}>
             <Icons.LogOut /> Sign out
-          </Link>
+          </button>
         </nav>
       </aside>
 
