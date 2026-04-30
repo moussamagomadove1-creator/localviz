@@ -151,8 +151,8 @@ async function extractBusinessLinks(page) {
  */
 async function deepScanBusiness(page, business) {
   try {
-    await page.goto(business.url, { waitUntil: 'domcontentloaded', timeout: 10000 });
-    await delay(500);
+    await page.goto(business.url, { waitUntil: 'domcontentloaded', timeout: 6000 });
+    await delay(300);
 
     return page.evaluate(() => {
       const siteNode = document.querySelector('a[data-item-id="authority"]');
@@ -264,8 +264,8 @@ async function scrapeGoogleMaps(city, category, limit = 15) {
 
   // On free tier (512MB RAM), skip sub-zones to save memory
   const subZones = isServer ? [city] : (isWholeFrance ? ['France'] : generateSubZones(city));
-  // Cap limit on server to avoid OOM
-  if (isServer && limit > 20) limit = 20;
+  // Cap limit on server to avoid OOM (512MB RAM)
+  if (isServer && limit > 5) limit = 5;
 
   console.log(`\n${'='.repeat(60)}`);
   console.log(`🔍 Starting scrape for: ${category} in ${city}`);
