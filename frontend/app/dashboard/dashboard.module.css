@@ -633,25 +633,20 @@
 /* ===== MOBILE HEADER & SIDEBAR TOGGLE ===== */
 .mobileHeader {
   display: none;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem 1.5rem;
-  background: rgba(12, 14, 21, 0.95);
-  border-bottom: 1px solid rgba(255,255,255,.08);
-  position: sticky;
-  top: 0;
-  z-index: 40;
 }
 
 .mobileMenuBtn {
-  background: transparent;
-  border: none;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
   color: var(--text-primary);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  backdrop-filter: blur(10px);
 }
 
 .desktopLogo {
@@ -665,7 +660,11 @@
   }
 
   .mobileHeader {
-    display: flex;
+    display: block;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 40;
   }
 
   .desktopLogo {

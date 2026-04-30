@@ -545,7 +545,6 @@ export default function Dashboard() {
   return (
     <div className={styles.dashboardLayout}>
       <div className={styles.mobileHeader}>
-        <div className={styles.logo}>Local<span className="text-gradient">Viz</span></div>
         <button className={styles.mobileMenuBtn} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
           {isMobileMenuOpen ? <Icons.Close /> : <Icons.Menu />}
         </button>
