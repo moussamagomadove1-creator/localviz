@@ -277,8 +277,7 @@ async function scrapeGoogleMaps(city, category, limit = 15) {
       '--disable-dev-shm-usage',
       '--disable-gpu',
       '--no-first-run',
-      '--no-zygote',
-      '--single-process'
+      '--disable-software-rasterizer'
     ]
   };
   // Use the Chrome installed in Docker if available
