@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+// Pre-built database architecture enabled
 const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
