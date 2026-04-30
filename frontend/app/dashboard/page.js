@@ -57,9 +57,14 @@ export default function Dashboard() {
   const fetchRealData = async (isRefresh = false, uid = null) => {
     try {
       const activeUser = uid || userId;
-      const url = activeUser ? `${API_URL}/api/leads?userId=${encodeURIComponent(activeUser)}` : `${API_URL}/api/leads`;
-      // Try fetching from the backend API first
-      const apiRes = await fetch(url).catch(() => null);
+      // SECURITY: Get fresh JWT token for authenticated API call
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token;
+      if (!token) return;
+      
+      const apiRes = await fetch(`${API_URL}/api/leads`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      }).catch(() => null);
       if (apiRes && apiRes.ok) {
         const apiData = await apiRes.json();
         if (apiData && apiData.length > 0) {
@@ -228,16 +233,31 @@ export default function Dashboard() {
     }, 4000);
 
     try {
+      // SECURITY: Get fresh JWT token
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token;
+      if (!token) {
+        clearInterval(msgIntv);
+        setScrapeMsg('Session expired. Please log in again.');
+        setScanState('idle');
+        setScraping(false);
+        return;
+      }
+      
       // 1. Create the job on the server
       const res = await fetch(`${API_URL}/api/scrape`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ city: scrapeCity.trim(), category: scrapeCategory.trim(), limit: enforcedLimit, userId: userId })
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ city: scrapeCity.trim(), category: scrapeCategory.trim(), limit: enforcedLimit })
       });
 
       if (!res.ok) {
         clearInterval(msgIntv);
-        setScrapeMsg('Error launching scan on server.');
+        const errData = await res.json().catch(() => null);
+        setScrapeMsg(errData?.error || 'Error launching scan on server.');
         setScanState('idle');
         setScraping(false);
         return;

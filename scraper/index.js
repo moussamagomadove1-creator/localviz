@@ -86,23 +86,43 @@ const supabase = createClient(
 );
 
 // ============================================================
+// SECURITY: Verify user JWT token from frontend
+// ============================================================
+async function requireAuth(req, res, next) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Authentication required' });
+  }
+  const token = authHeader.split(' ')[1];
+  const { data: { user }, error } = await supabase.auth.getUser(token);
+  if (error || !user) {
+    return res.status(401).json({ error: 'Invalid or expired token' });
+  }
+  req.authenticatedUser = user;
+  next();
+}
+
+// ============================================================
+// SECURITY: Per-user scan cooldown & daily limit
+// ============================================================
+const userScanHistory = new Map(); // userId -> { lastScan: timestamp, dailyCount: number, dayStart: timestamp }
+const SCAN_COOLDOWN = 30 * 1000; // 30 seconds between scans
+const MAX_DAILY_SCANS = 50; // max 50 scans per day
+
+// ============================================================
 // JOB QUEUE - Website creates jobs, local PC executes them
 // ============================================================
 let jobQueue = [];
 let jobIdCounter = 1;
 
 // Website calls this to start a scan → creates a job for the local worker
-app.post('/api/scrape', async (req, res) => {
-  const { city, category, limit, userId } = req.body;
+app.post('/api/scrape', requireAuth, async (req, res) => {
+  const { city, category, limit } = req.body;
+  const userId = req.authenticatedUser.id; // SECURITY: Use verified user ID, not what the client sends
   
   // SECURITY: Validate required fields
   if (!city || !category) {
     return res.status(400).json({ error: 'City and category are required' });
-  }
-  
-  // SECURITY: Validate userId format (UUID)
-  if (!userId || typeof userId !== 'string' || !/^[0-9a-f-]{36}$/i.test(userId)) {
-    return res.status(400).json({ error: 'Valid userId is required' });
   }
 
   // SECURITY: Sanitize inputs
@@ -112,6 +132,32 @@ app.post('/api/scrape', async (req, res) => {
   // SECURITY: Cap the limit to prevent abuse (max 200 profiles per scan)
   const MAX_SCAN_LIMIT = 200;
   const cleanLimit = Math.min(Math.max(parseInt(limit) || 15, 1), MAX_SCAN_LIMIT);
+  
+  // SECURITY: Per-user scan cooldown & daily limit
+  const now = Date.now();
+  const history = userScanHistory.get(userId) || { lastScan: 0, dailyCount: 0, dayStart: now };
+  
+  // Reset daily count if new day
+  if (now - history.dayStart > 24 * 60 * 60 * 1000) {
+    history.dailyCount = 0;
+    history.dayStart = now;
+  }
+  
+  // Check cooldown
+  if (now - history.lastScan < SCAN_COOLDOWN) {
+    const wait = Math.ceil((SCAN_COOLDOWN - (now - history.lastScan)) / 1000);
+    return res.status(429).json({ error: `Please wait ${wait} seconds before launching another scan.` });
+  }
+  
+  // Check daily limit
+  if (history.dailyCount >= MAX_DAILY_SCANS) {
+    return res.status(429).json({ error: `Daily scan limit reached (${MAX_DAILY_SCANS}). Try again tomorrow.` });
+  }
+  
+  // Update history
+  history.lastScan = now;
+  history.dailyCount++;
+  userScanHistory.set(userId, history);
   
   // Find existing leads for this user to avoid duplicates by querying Supabase
   let existingNames = [];
@@ -190,16 +236,12 @@ app.get('/api/jobs/:id/status', (req, res) => {
   res.json({ status: job.status, count: job.count });
 });
 
-// API route to get all leads
-app.get('/api/leads', async (req, res) => {
-  const userId = req.query.userId;
-  if (userId) {
-    const { data, error } = await supabase.from('leads').select('*').eq('user_id', userId).order('created_at', { ascending: false });
-    if (error) return res.status(500).json({ error: error.message });
-    res.json(data || []);
-  } else {
-    res.json([]);
-  }
+// API route to get all leads (PROTECTED: user can only see their own)
+app.get('/api/leads', requireAuth, async (req, res) => {
+  const userId = req.authenticatedUser.id; // SECURITY: Use verified ID
+  const { data, error } = await supabase.from('leads').select('*').eq('user_id', userId).order('created_at', { ascending: false });
+  if (error) return res.status(500).json({ error: error.message });
+  res.json(data || []);
 });
 
 // Health check (no sensitive info exposed)
