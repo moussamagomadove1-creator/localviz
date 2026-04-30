@@ -1,10 +1,18 @@
 'use client';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { supabase } from '../utils/supabase/client';
 import Link from 'next/link';
 import styles from './page.module.css';
 
 export default function Home() {
   const headerRef = useRef(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsLoggedIn(!!session);
+    });
+  }, []);
 
   // ===== Header hide/show on scroll =====
   useEffect(() => {
@@ -53,8 +61,14 @@ export default function Home() {
             <a href="#pricing" className={styles.navLink}>Pricing</a>
           </div>
           <div className={styles.navCta}>
-            <Link href="/login" className="btn-secondary">Log in</Link>
-            <Link href="/login" className="btn-primary">Get Started →</Link>
+            {isLoggedIn ? (
+              <Link href="/dashboard" className="btn-primary">Go to Dashboard →</Link>
+            ) : (
+              <>
+                <Link href="/login" className="btn-secondary">Log in</Link>
+                <Link href="/login" className="btn-primary">Get Started →</Link>
+              </>
+            )}
           </div>
         </div>
       </header>
@@ -76,9 +90,15 @@ export default function Home() {
               We scan thousands of local businesses on Google Maps to find the ones with zero online presence. You contact them, you close the deal.
             </p>
             <div className={styles.ctaRow}>
-              <Link href="/login" className="btn-primary" style={{ padding: '13px 24px', fontSize: '15px' }}>
-                Try it free — 3 scans included
-              </Link>
+              {isLoggedIn ? (
+                <Link href="/dashboard" className="btn-primary" style={{ padding: '13px 24px', fontSize: '15px' }}>
+                  Open your Dashboard
+                </Link>
+              ) : (
+                <Link href="/login" className="btn-primary" style={{ padding: '13px 24px', fontSize: '15px' }}>
+                  Try it free — 3 scans included
+                </Link>
+              )}
               <a href="#features" className="btn-secondary" style={{ padding: '13px 24px', fontSize: '15px' }}>
                 See how it works →
               </a>

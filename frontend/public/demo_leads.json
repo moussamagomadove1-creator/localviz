@@ -1,5 +1,15 @@
 [
   {
+    "name": "Le P'tit Bistrot",
+    "city": "Paris",
+    "category": "Restaurant",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Le+P%27tit+Bistrot/data=!4m7!3m6!1s0x47e66e1e6d2269ed:0x71c3b2229f4b62d7!8m2!3d48.8575531!4d2.3496363!16s%2Fg%2F1q629xkzv!19sChIJ7WkibR5u5kcR12JLnyKyw3E?authuser=0&hl=en&rclk=1",
+    "address": "8 Rue Saint-Martin, 75004 Paris",
+    "phone": "01 42 78 55 80",
+    "rating": "4.6"
+  },
+  {
     "name": "JOHAN Plombier Paris 18",
     "city": "Paris",
     "category": "Plumber",

@@ -10,6 +10,14 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null); // { type: 'error' | 'success', text: '' }
 
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        window.location.href = '/dashboard';
+      }
+    });
+  }, []);
+
   const handleAuth = async (e, isSignUp = false) => {
     e.preventDefault();
     setLoading(true);
