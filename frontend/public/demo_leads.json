@@ -1,65 +1,5 @@
 [
   {
-    "name": "Grand Garage Haussmann",
-    "city": "Paris",
-    "category": "Garage",
-    "has_website": false,
-    "url": "https://www.google.com/maps/place/Grand+Garage+Haussmann/data=!4m7!3m6!1s0x47e66fca2062d9cf:0x79855fb05153d36b!8m2!3d48.8754609!4d2.3180312!16s%2Fg%2F11g9dmck48!19sChIJz9liIMpv5kcRa9NTUbBfhXk?authuser=0&hl=en&rclk=1",
-    "address": "43-45 Rue de Laborde, 75008 Paris",
-    "phone": "01 45 22 01 75",
-    "rating": "4.7"
-  },
-  {
-    "name": "Garage Boulard",
-    "city": "Paris",
-    "category": "Garage",
-    "has_website": false,
-    "url": "https://www.google.com/maps/place/Garage+Boulard/data=!4m7!3m6!1s0x47e671b703cfaaa1:0x20d5e2f27a9f3001!8m2!3d48.8334803!4d2.3289162!16s%2Fg%2F11tk2054vh!19sChIJoarPA7dx5kcRATCfevLi1SA?authuser=0&hl=en&rclk=1",
-    "address": "25 Rue Boulard, 75014 Paris",
-    "phone": "01 56 53 66 96",
-    "rating": "5.0"
-  },
-  {
-    "name": "Auto Nantes",
-    "city": "Paris",
-    "category": "Garage",
-    "has_website": false,
-    "url": "https://www.google.com/maps/place/Auto+Nantes/data=!4m7!3m6!1s0x47e66dd2774cfe57:0x85a483cfe5893a28!8m2!3d48.8926234!4d2.3809539!16s%2Fg%2F1tksh2wq!19sChIJV_5Md9Jt5kcRKDqJ5c-DpIU?authuser=0&hl=en&rclk=1",
-    "address": "32 Rue de Nantes, 75019 Paris",
-    "phone": "01 40 36 80 33",
-    "rating": "4.6"
-  },
-  {
-    "name": "AUTOMOBILI MONTAIGNE",
-    "city": "Paris",
-    "category": "Garage",
-    "has_website": false,
-    "url": "https://www.google.com/maps/place/AUTOMOBILI+MONTAIGNE/data=!4m7!3m6!1s0x47e66f1512ac1163:0xd07e61505c128a18!8m2!3d48.8667969!4d2.3048728!16s%2Fg%2F11j7csr47f!19sChIJYxGsEhVv5kcRGIoSXFBhftA?authuser=0&hl=en&rclk=1",
-    "address": "31 Av. Montaigne, 75008 Paris",
-    "phone": "06 24 06 06 06",
-    "rating": "4.6"
-  },
-  {
-    "name": "Garage beauvais",
-    "city": "Paris",
-    "category": "Garage",
-    "has_website": false,
-    "url": "https://www.google.com/maps/place/Garage+beauvais/data=!4m7!3m6!1s0x47e66f16ddd8c6e3:0x47495781ae9cb3ca!8m2!3d48.8635803!4d2.3406295!16s%2Fg%2F11vpv17bn7!19sChIJ48bY3RZv5kcRyrOcroFXSUc?authuser=0&hl=en&rclk=1",
-    "address": "Rue du Bouloi, 75001 Paris",
-    "phone": "06 44 66 11 11",
-    "rating": "1.0"
-  },
-  {
-    "name": "JB Garage",
-    "city": "Paris",
-    "category": "Garage",
-    "has_website": false,
-    "url": "https://www.google.com/maps/place/JB+Garage/data=!4m7!3m6!1s0x47e66e66602adbfd:0xb884f0572b74fd70!8m2!3d48.8886393!4d2.3518248!16s%2Fg%2F11gdg6b1_s!19sChIJ_dsqYGZu5kcRcP10K1fwhLg?authuser=0&hl=en&rclk=1",
-    "address": "42 Rue des Poissonniers, 75018 Paris",
-    "phone": "01 46 06 28 55",
-    "rating": "4.0"
-  },
-  {
     "name": "Garage Republique",
     "city": "Paris",
     "category": "Garage",
@@ -68,16 +8,6 @@
     "address": "133 Rue Amelot, 75011 Paris",
     "phone": "09 84 48 27 16",
     "rating": "4.8"
-  },
-  {
-    "name": "Garage Des Roses",
-    "city": "Paris",
-    "category": "Garage",
-    "has_website": false,
-    "url": "https://www.google.com/maps/place/Garage+Des+Roses/data=!4m7!3m6!1s0x47e66e7ce4faadb7:0x3718ec5e372ddb07!8m2!3d48.8932188!4d2.3607956!16s%2Fg%2F1td_xxht!19sChIJt6365Hxu5kcRB9stN17sGDc?authuser=0&hl=en&rclk=1",
-    "address": "23 Rue des Roses, 75018 Paris",
-    "phone": "01 46 07 11 17",
-    "rating": "4.5"
   },
   {
     "name": "China's Garage",
@@ -110,16 +40,6 @@
     "rating": "3.8"
   },
   {
-    "name": "YF Auto Paris",
-    "city": "Paris",
-    "category": "Garage",
-    "has_website": false,
-    "url": "https://www.google.com/maps/place/YF+Auto+Paris/data=!4m7!3m6!1s0x47e671431a8ccae5:0x645e34fdda4c29e7!8m2!3d48.8316032!4d2.3687336!16s%2Fg%2F11q1jjgplm!19sChIJ5cqMGkNx5kcR5ylM2v00XmQ?authuser=0&hl=en&rclk=1",
-    "address": "38 Rue Dunois, 75013 Paris",
-    "phone": "07 51 10 80 93",
-    "rating": "4.7"
-  },
-  {
     "name": "Station Meca Voltaire",
     "city": "Paris",
     "category": "Garage",
@@ -138,36 +58,6 @@
     "address": "11 Rue du Dessous des Berges, 75013 Paris",
     "phone": "06 51 82 89 18",
     "rating": "4.9"
-  },
-  {
-    "name": "Garage Crozatier",
-    "city": "Paris",
-    "category": "Garage",
-    "has_website": false,
-    "url": "https://www.google.com/maps/place/Garage+Crozatier/data=!4m7!3m6!1s0x47e6720efe82b4a3:0xba89635e1c813449!8m2!3d48.8482399!4d2.38027!16s%2Fg%2F1tfk_j38!19sChIJo7SC_g5y5kcRSTSBHF5jibo?authuser=0&hl=en&rclk=1",
-    "address": "1 Imp. Crozatier, 75012 Paris",
-    "phone": "01 53 33 05 49",
-    "rating": "4.7"
-  },
-  {
-    "name": "GARAGE PAJOL",
-    "city": "Paris",
-    "category": "Garage",
-    "has_website": false,
-    "url": "https://www.google.com/maps/place/GARAGE+PAJOL/data=!4m7!3m6!1s0x47e66e7c0faa8b95:0x16e2c53515d5f537!8m2!3d48.8915689!4d2.3633963!16s%2Fg%2F11c6pq955s!19sChIJlYuqD3xu5kcRN_XVFTXF4hY?authuser=0&hl=en&rclk=1",
-    "address": "48B Rue Pajol, 75018 Paris",
-    "phone": "01 83 94 87 77",
-    "rating": "4.4"
-  },
-  {
-    "name": "garage automobile vidange reparation diagnostic auto",
-    "city": "Paris",
-    "category": "Garage",
-    "has_website": false,
-    "url": "https://www.google.com/maps/place/garage+automobile+vidange+reparation+diagnostic+auto/data=!4m7!3m6!1s0x47e66f7429064293:0xd4ce2abde3c5e5dd!8m2!3d48.881523!4d2.3279587!16s%2Fg%2F11xcyjsl27!19sChIJk0IGKXRv5kcR3eXF470qztQ?authuser=0&hl=en&rclk=1",
-    "address": "63 Rue de Clichy, 75009 Paris",
-    "phone": "06 18 45 13 31",
-    "rating": "5.0"
   },
   {
     "name": "GARAGE MECANIQUE BELLEVILLE PARIS",
@@ -218,6 +108,266 @@
     "address": "13 Rue de Lourmel, 75015 Paris",
     "phone": "01 45 78 13 46",
     "rating": "4.2"
+  },
+  {
+    "name": "Auto Nantes",
+    "city": "Paris",
+    "category": "Garage",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Auto+Nantes/data=!4m7!3m6!1s0x47e66dd2774cfe57:0x85a483cfe5893a28!8m2!3d48.8926234!4d2.3809539!16s%2Fg%2F1tksh2wq!19sChIJV_5Md9Jt5kcRKDqJ5c-DpIU?authuser=0&hl=en&rclk=1",
+    "address": "32 Rue de Nantes, 75019 Paris",
+    "phone": "01 40 36 80 33",
+    "rating": "4.6"
+  },
+  {
+    "name": "AUTOMOBILI MONTAIGNE",
+    "city": "Paris",
+    "category": "Garage",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/AUTOMOBILI+MONTAIGNE/data=!4m7!3m6!1s0x47e66f1512ac1163:0xd07e61505c128a18!8m2!3d48.8667969!4d2.3048728!16s%2Fg%2F11j7csr47f!19sChIJYxGsEhVv5kcRGIoSXFBhftA?authuser=0&hl=en&rclk=1",
+    "address": "31 Av. Montaigne, 75008 Paris",
+    "phone": "06 24 06 06 06",
+    "rating": "4.6"
+  },
+  {
+    "name": "Garage beauvais",
+    "city": "Paris",
+    "category": "Garage",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Garage+beauvais/data=!4m7!3m6!1s0x47e66f16ddd8c6e3:0x47495781ae9cb3ca!8m2!3d48.8635803!4d2.3406295!16s%2Fg%2F11vpv17bn7!19sChIJ48bY3RZv5kcRyrOcroFXSUc?authuser=0&hl=en&rclk=1",
+    "address": "Rue du Bouloi, 75001 Paris",
+    "phone": "06 44 66 11 11",
+    "rating": "1.0"
+  },
+  {
+    "name": "JB Garage",
+    "city": "Paris",
+    "category": "Garage",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/JB+Garage/data=!4m7!3m6!1s0x47e66e66602adbfd:0xb884f0572b74fd70!8m2!3d48.8886393!4d2.3518248!16s%2Fg%2F11gdg6b1_s!19sChIJ_dsqYGZu5kcRcP10K1fwhLg?authuser=0&hl=en&rclk=1",
+    "address": "42 Rue des Poissonniers, 75018 Paris",
+    "phone": "01 46 06 28 55",
+    "rating": "4.0"
+  },
+  {
+    "name": "Grand Garage Haussmann",
+    "city": "Paris",
+    "category": "Garage",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Grand+Garage+Haussmann/data=!4m7!3m6!1s0x47e66fca2062d9cf:0x79855fb05153d36b!8m2!3d48.8754609!4d2.3180312!16s%2Fg%2F11g9dmck48!19sChIJz9liIMpv5kcRa9NTUbBfhXk?authuser=0&hl=en&rclk=1",
+    "address": "43-45 Rue de Laborde, 75008 Paris",
+    "phone": "01 45 22 01 75",
+    "rating": "4.7"
+  },
+  {
+    "name": "Garage Boulard",
+    "city": "Paris",
+    "category": "Garage",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Garage+Boulard/data=!4m7!3m6!1s0x47e671b703cfaaa1:0x20d5e2f27a9f3001!8m2!3d48.8334803!4d2.3289162!16s%2Fg%2F11tk2054vh!19sChIJoarPA7dx5kcRATCfevLi1SA?authuser=0&hl=en&rclk=1",
+    "address": "25 Rue Boulard, 75014 Paris",
+    "phone": "01 56 53 66 96",
+    "rating": "5.0"
+  },
+  {
+    "name": "Garage Paris Shweyangyan",
+    "city": "Paris",
+    "category": "Garage",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Garage+Paris+Shweyangyan/data=!4m7!3m6!1s0x47e673b3de4af48f:0x9b47edc44d6df001!8m2!3d48.8121279!4d2.3733962!16s%2Fg%2F11h152hk72!19sChIJj_RK3rNz5kcRAfBtTcTtR5s?authuser=0&hl=en&rclk=1",
+    "address": "85 Rue Hoche, 94200 Ivry-sur-Seine",
+    "phone": "01 56 20 08 05",
+    "rating": "4.5"
+  },
+  {
+    "name": "Auto Fast Services",
+    "city": "Paris",
+    "category": "Garage",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Auto+Fast+Services/data=!4m7!3m6!1s0x47e66d9c1f71f6b7:0x93bf9537978d8fd3!8m2!3d48.8860718!4d2.3991488!16s%2Fg%2F11l2ws_vcl!19sChIJt_ZxH5xt5kcR04-NlzeVv5M?authuser=0&hl=en&rclk=1",
+    "address": "61 Av. de la Prte Chaumont, 75019 Paris",
+    "phone": "07 59 47 47 84",
+    "rating": "4.4"
+  },
+  {
+    "name": "Les Amis de L'Automobile",
+    "city": "Paris",
+    "category": "Garage",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Les+Amis+de+L%27Automobile/data=!4m7!3m6!1s0x47e67052f431a0f5:0xc52585086eb1c6ef!8m2!3d48.8247907!4d2.317267!16s%2Fg%2F1tfft7n_!19sChIJ9aAx9FJw5kcR78axbgiFJcU?authuser=0&hl=en&rclk=1",
+    "address": "100 Boulevard Brune, 75014 Paris",
+    "phone": "01 45 45 01 28",
+    "rating": "5.0"
+  },
+  {
+    "name": "Garage des Ursulines dépannage",
+    "city": "Paris",
+    "category": "Garage",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Garage+des+Ursulines+d%C3%A9pannage/data=!4m7!3m6!1s0x47e671c26c7cd2ab:0x2d5d74d00df18df2!8m2!3d48.8425541!4d2.3422787!16s%2Fg%2F1tjthlfb!19sChIJq9J8bMJx5kcR8o3xDdB0XS0?authuser=0&hl=en&rclk=1",
+    "address": "7 Rue des Ursulines, 75005 Paris",
+    "phone": "06 98 49 14 14",
+    "rating": "4.2"
+  },
+  {
+    "name": "Garage Meyer",
+    "city": "Paris",
+    "category": "Garage",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Garage+Meyer/data=!4m7!3m6!1s0x47e670391cddf26d:0x81d145d1c38bf10e!8m2!3d48.8394955!4d2.3057469!16s%2Fg%2F11jzw8qr1q!19sChIJbfLdHDlw5kcRDvGLw9FF0YE?authuser=0&hl=en&rclk=1",
+    "address": "16 Rue de la Procession, 75015 Paris",
+    "phone": "01 47 34 80 64",
+    "rating": "5.0"
+  },
+  {
+    "name": "Mécanique Auto A Domicile et Mobile",
+    "city": "Paris",
+    "category": "Garage",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/M%C3%A9canique+Auto+A+Domicile+et+Mobile/data=!4m7!3m6!1s0x47e66d7b7da38af1:0xee92b0500066db51!8m2!3d48.8840837!4d2.390009!16s%2Fg%2F11lw4d563k!19sChIJ8YqjfXtt5kcRUdtmAFCwku4?authuser=0&hl=en&rclk=1",
+    "address": "121 Rue Manin, 75019 Paris",
+    "phone": "07 73 16 18 76",
+    "rating": "4.7"
+  },
+  {
+    "name": "[P] Parking Halles Garage - Parking - Station service",
+    "city": "Paris",
+    "category": "Garage",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/%5BP%5D+Parking+Halles+Garage+-+Parking+-+Station+service/data=!4m7!3m6!1s0x47e66e2204fe3bb5:0x45c16550a035fc02!8m2!3d48.8610879!4d2.3413635!16s%2Fg%2F1tlkbpkb!19sChIJtTv-BCJu5kcRAvw1oFBlwUU?authuser=0&hl=en&rclk=1",
+    "address": "10 Rue Bailleul, 75001 Paris",
+    "phone": "01 42 60 36 24",
+    "rating": "3.2"
+  },
+  {
+    "name": "Parking Indigo Paris Pyramides",
+    "city": "Paris",
+    "category": "Garage",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Parking+Indigo+Paris+Pyramides/data=!4m7!3m6!1s0x47e66f7dbc7ce25b:0x21bdeed59a7c51c4!8m2!3d48.8650821!4d2.3334062!16s%2Fg%2F11z055qkhg!19sChIJW-J8vH1v5kcRxFF8mtXuvSE?authuser=0&hl=en&rclk=1",
+    "address": "14 Rue des Pyramides, 75001 Paris",
+    "phone": "09 73 72 33 13",
+    "rating": "N/A"
+  },
+  {
+    "name": "Parking public Sainte-Apolline",
+    "city": "Paris",
+    "category": "Garage",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Parking+public+Sainte-Apolline/data=!4m7!3m6!1s0x47e66ddc61d70f37:0x5a93fde4e7b98b70!8m2!3d48.8691841!4d2.3529718!16s%2Fg%2F1hc6lx_vb!19sChIJNw_XYdxt5kcRcIu55-T9k1o?authuser=0&hl=en&rclk=1",
+    "address": "16 Rue Sainte-Apolline, 75002 Paris",
+    "phone": "0 899 23 00 09",
+    "rating": "4.0"
+  },
+  {
+    "name": "Le Garage Paris",
+    "city": "Paris",
+    "category": "Garage",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Le+Garage+Paris/data=!4m7!3m6!1s0x47e66e1438340001:0xac6e77dd937d4486!8m2!3d48.8723528!4d2.3493723!16s%2Fg%2F11df0whw24!19sChIJAQA0OBRu5kcRhkR9k913bqw?authuser=0&hl=en&rclk=1",
+    "address": "38 Rue d'Enghien, 75010 Paris",
+    "phone": "06 07 03 39 41",
+    "rating": "4.7"
+  },
+  {
+    "name": "Parking du Centre Pompidou",
+    "city": "Paris",
+    "category": "Garage",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Parking+du+Centre+Pompidou/data=!4m7!3m6!1s0x47e66e1b0d1f5121:0x33bb7300a43fa58b!8m2!3d48.861475!4d2.353385!16s%2Fg%2F1txy1n0g!19sChIJIVEfDRtu5kcRi6U_pABzuzM?authuser=0&hl=en&rclk=1",
+    "address": "31 Rue Beaubourg, 75003 Paris",
+    "phone": "01 45 72 45 87",
+    "rating": "3.3"
+  },
+  {
+    "name": "Mon Garage Mobile",
+    "city": "Paris",
+    "category": "Garage",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Mon+Garage+Mobile/data=!4m7!3m6!1s0x47e66e0fadb9f181:0xd23bd06bac419dd!8m2!3d48.8683006!4d2.35894!16s%2Fg%2F11rhbrvrgs!19sChIJgfG5rQ9u5kcR3RnEuga9Iw0?authuser=0&hl=en&rclk=1",
+    "address": "27 Bd Saint-Martin, 75003 Paris",
+    "phone": "01 48 41 44 27",
+    "rating": "4.7"
+  },
+  {
+    "name": "Grand Garage Turenne",
+    "city": "Paris",
+    "category": "Garage",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Grand+Garage+Turenne/data=!4m7!3m6!1s0x47e66e00dfa5c5b5:0x19f7c0de9d8910c6!8m2!3d48.8596747!4d2.3646529!16s%2Fg%2F1tfx4690!19sChIJtcWl3wBu5kcRxhCJnd7A9xk?authuser=0&hl=en&rclk=1",
+    "address": "66 Rue de Turenne, 75003 Paris",
+    "phone": "01 42 72 34 23",
+    "rating": "4.5"
+  },
+  {
+    "name": "Parking de Paris",
+    "city": "Paris",
+    "category": "Garage",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Parking+de+Paris/data=!4m7!3m6!1s0x47e671f201d649cd:0xc7e7b7b90e503cc8!8m2!3d48.8409665!4d2.3546094!16s%2Fg%2F11c5_ty54n!19sChIJzUnWAfJx5kcRyDxQDrm358c?authuser=0&hl=en&rclk=1",
+    "address": "12 Rue Censier, 75005 Paris",
+    "phone": "0 810 26 30 00",
+    "rating": "3.3"
+  },
+  {
+    "name": "Elan Sarl Elga Port Royal",
+    "city": "Paris",
+    "category": "Garage",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Elan+Sarl+Elga+Port+Royal/data=!4m7!3m6!1s0x47e671eaf191efa5:0x425d5db5b686ccd6!8m2!3d48.8379472!4d2.3445372!16s%2Fg%2F1ttyw1f7!19sChIJpe-R8epx5kcR1syGtrVdXUI?authuser=0&hl=en&rclk=1",
+    "address": "72 Bd de Port-Royal, 75005 Paris",
+    "phone": "01 45 35 21 22",
+    "rating": "3.6"
+  },
+  {
+    "name": "Garage Des Roses",
+    "city": "Paris",
+    "category": "Garage",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Garage+Des+Roses/data=!4m7!3m6!1s0x47e66e7ce4faadb7:0x3718ec5e372ddb07!8m2!3d48.8932188!4d2.3607956!16s%2Fg%2F1td_xxht!19sChIJt6365Hxu5kcRB9stN17sGDc?authuser=0&hl=en&rclk=1",
+    "address": "23 Rue des Roses, 75018 Paris",
+    "phone": "01 46 07 11 17",
+    "rating": "4.5"
+  },
+  {
+    "name": "YF Auto Paris",
+    "city": "Paris",
+    "category": "Garage",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/YF+Auto+Paris/data=!4m7!3m6!1s0x47e671431a8ccae5:0x645e34fdda4c29e7!8m2!3d48.8316032!4d2.3687336!16s%2Fg%2F11q1jjgplm!19sChIJ5cqMGkNx5kcR5ylM2v00XmQ?authuser=0&hl=en&rclk=1",
+    "address": "38 Rue Dunois, 75013 Paris",
+    "phone": "07 51 10 80 93",
+    "rating": "4.7"
+  },
+  {
+    "name": "Garage Crozatier",
+    "city": "Paris",
+    "category": "Garage",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Garage+Crozatier/data=!4m7!3m6!1s0x47e6720efe82b4a3:0xba89635e1c813449!8m2!3d48.8482399!4d2.38027!16s%2Fg%2F1tfk_j38!19sChIJo7SC_g5y5kcRSTSBHF5jibo?authuser=0&hl=en&rclk=1",
+    "address": "1 Imp. Crozatier, 75012 Paris",
+    "phone": "01 53 33 05 49",
+    "rating": "4.7"
+  },
+  {
+    "name": "GARAGE PAJOL",
+    "city": "Paris",
+    "category": "Garage",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/GARAGE+PAJOL/data=!4m7!3m6!1s0x47e66e7c0faa8b95:0x16e2c53515d5f537!8m2!3d48.8915689!4d2.3633963!16s%2Fg%2F11c6pq955s!19sChIJlYuqD3xu5kcRN_XVFTXF4hY?authuser=0&hl=en&rclk=1",
+    "address": "48B Rue Pajol, 75018 Paris",
+    "phone": "01 83 94 87 77",
+    "rating": "4.4"
+  },
+  {
+    "name": "garage automobile vidange reparation diagnostic auto",
+    "city": "Paris",
+    "category": "Garage",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/garage+automobile+vidange+reparation+diagnostic+auto/data=!4m7!3m6!1s0x47e66f7429064293:0xd4ce2abde3c5e5dd!8m2!3d48.881523!4d2.3279587!16s%2Fg%2F11xcyjsl27!19sChIJk0IGKXRv5kcR3eXF470qztQ?authuser=0&hl=en&rclk=1",
+    "address": "63 Rue de Clichy, 75009 Paris",
+    "phone": "06 18 45 13 31",
+    "rating": "5.0"
   },
   {
     "name": "Flash Auto",

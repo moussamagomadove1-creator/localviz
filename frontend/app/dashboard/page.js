@@ -52,7 +52,7 @@ export default function Dashboard() {
   const [scrapeMsg, setScrapeMsg] = useState('');
 
   // SECURITY: These limits are enforced in JS (not just HTML attributes)
-  const MAX_SCAN_LIMIT = isPro ? 2000 : 50;
+  const MAX_SCAN_LIMIT = isPro ? 999999 : 50;
   const MIN_SCAN_LIMIT = 1;
 
   const fetchRealData = async (isRefresh = false, uid = null) => {
@@ -197,9 +197,9 @@ export default function Dashboard() {
     if (parseInt(scrapeLimit) !== enforcedLimit) {
       setScrapeLimit(enforcedLimit);
       if (!isPro && parseInt(scrapeLimit) > 50) {
-        setScrapeMsg('⚠️ 50 is the maximum on the Free plan. Upgrade to Pro to scan up to 2000 profiles!');
+        setScrapeMsg('⚠️ 50 is the maximum on the Free plan. Upgrade to Pro to scan unlimited profiles!');
       } else {
-        setScrapeMsg(`⚠️ Limit adjusted to ${enforcedLimit} (max allowed: ${MAX_SCAN_LIMIT}).`);
+        setScrapeMsg(`⚠️ Limit adjusted to ${enforcedLimit}.`);
       }
       return;
     }
@@ -275,22 +275,27 @@ export default function Dashboard() {
         try {
           const statusRes = await fetch(`${API_URL}/api/jobs/${jobId}/status`);
           if (statusRes.ok) {
-            const data = await statusRes.json();
+            const statusData = await statusRes.json();
             
-            // Provide feedback based on job status
-            if (data.status === 'running') {
+            if (statusData.status === 'running') {
               setScrapeMsg(`Local worker is actively scanning...`);
             }
 
-            if (data.status === 'done') {
+            if (statusData.status === 'done') {
               clearInterval(msgIntv);
               clearInterval(pollIntv);
-              setScanResult(data.count);
+              setScanResult(statusData.count);
               setScanState('done');
               setScraping(false);
               // Refresh data from the server
               fetchRealData(true);
             }
+          } else if (statusRes.status === 404) {
+            clearInterval(msgIntv);
+            clearInterval(pollIntv);
+            setScrapeMsg('Scan interrupted. The server restarted or the job was lost. Please try again.');
+            setScanState('idle');
+            setScraping(false);
           }
         } catch (pollErr) {
           console.error("Polling error", pollErr);
@@ -394,7 +399,7 @@ export default function Dashboard() {
                         else if (val > MAX_SCAN_LIMIT) {
                           setScrapeLimit(MAX_SCAN_LIMIT);
                           if (!isPro) {
-                            setScrapeMsg('⚠️ 50 is the maximum on the Free plan. Upgrade to Pro to scan up to 2000 profiles!');
+                            setScrapeMsg('⚠️ 50 is the maximum on the Free plan. Upgrade to Pro to scan unlimited profiles!');
                           }
                         }
                         else setScrapeLimit(val);
