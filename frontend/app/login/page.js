@@ -8,31 +8,37 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState(null); // { type: 'error' | 'success', text: '' }
 
   const handleAuth = async (e, isSignUp = false) => {
     e.preventDefault();
     setLoading(true);
+    setMessage(null);
 
     try {
       let result;
       if (isSignUp) {
         result = await supabase.auth.signUp({ email, password });
         if (result.data?.user && result.data?.user?.identities?.length === 0) {
-           alert("This email is already registered. Try signing in.");
+           setMessage({ type: 'error', text: "This email is already registered. Try signing in." });
         } else if (result.error) {
-           alert(result.error.message);
+           setMessage({ type: 'error', text: result.error.message });
         } else {
-           alert("Registration successful! You are now signed in.");
-           window.location.href = '/dashboard';
+           setMessage({ type: 'success', text: "Registration successful! Redirecting..." });
+           setTimeout(() => window.location.href = '/dashboard', 1500);
         }
       } else {
         result = await supabase.auth.signInWithPassword({ email, password });
-        if (result.error) alert(result.error.message);
-        else window.location.href = '/dashboard';
+        if (result.error) {
+           setMessage({ type: 'error', text: result.error.message });
+        } else {
+           setMessage({ type: 'success', text: "Welcome back! Redirecting..." });
+           setTimeout(() => window.location.href = '/dashboard', 1000);
+        }
       }
     } catch (err) {
       console.error(err);
-      alert("An error occurred during authentication.");
+      setMessage({ type: 'error', text: "An error occurred during authentication." });
     }
     setLoading(false);
   };
@@ -48,6 +54,22 @@ export default function Login() {
         </div>
         <h1 className={styles.title}>Welcome back</h1>
         <p className={styles.subtitle}>Sign in to access your LocalViz dashboard.</p>
+
+        {message && (
+          <div style={{
+            padding: '0.75rem 1rem',
+            borderRadius: '8px',
+            marginBottom: '1.5rem',
+            fontSize: '0.875rem',
+            fontWeight: '500',
+            textAlign: 'center',
+            backgroundColor: message.type === 'error' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(16, 185, 129, 0.1)',
+            color: message.type === 'error' ? '#ef4444' : '#10b981',
+            border: `1px solid ${message.type === 'error' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(16, 185, 129, 0.2)'}`
+          }}>
+            {message.text}
+          </div>
+        )}
 
         <form className={styles.form} onSubmit={(e) => handleAuth(e, false)}>
           <div className={styles.inputGroup}>
