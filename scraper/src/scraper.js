@@ -151,8 +151,8 @@ async function extractBusinessLinks(page) {
  */
 async function deepScanBusiness(page, business) {
   try {
-    await page.goto(business.url, { waitUntil: 'domcontentloaded', timeout: 6000 });
-    await delay(300);
+    await page.goto(business.url, { waitUntil: 'domcontentloaded', timeout: 15000 });
+    await delay(400);
 
     return page.evaluate(() => {
       const siteNode = document.querySelector('a[data-item-id="authority"]');

@@ -56,6 +56,27 @@ app.get('/api/leads', (req, res) => {
   res.json(leadsStore);
 });
 
+// API route to receive leads pushed from local scraper
+app.post('/api/leads/push', (req, res) => {
+  const { leads } = req.body;
+  if (!leads || !Array.isArray(leads)) {
+    return res.status(400).json({ error: 'leads array is required' });
+  }
+  let added = 0;
+  for (const lead of leads) {
+    if (!leadsStore.some(e => e.name === lead.name && e.city === lead.city)) {
+      leadsStore.unshift(lead);
+      added++;
+    }
+  }
+  // Persist
+  try {
+    const path = require('path');
+    fs.writeFileSync(path.join(__dirname, 'leads_data.json'), JSON.stringify(leadsStore, null, 2));
+  } catch(e) {}
+  res.json({ message: `${added} new leads added`, total: leadsStore.length });
+});
+
 // Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date(), leadsCount: leadsStore.length });
