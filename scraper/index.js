@@ -90,6 +90,81 @@ async function requireAuth(req, res, next) {
 }
 
 // ============================================================
+// API: Scan (queries pre-built master_leads database)
+// ============================================================
+app.post('/api/scrape', requireAuth, async (req, res) => {
+  const { city, category, limit } = req.body;
+  const userId = req.authenticatedUser.id;
+  
+  // Validate
+  if (!city || !category) {
+    return res.status(400).json({ error: 'City and category are required' });
+  }
+
+  const cleanCity = sanitize(city, 100);
+  const cleanCategory = sanitize(category, 100);
+  const isPro = req.authenticatedUser.email === 'admin@localviz.com';
+  const MAX_SCAN_LIMIT = isPro ? 999999 : 50;
+  const cleanLimit = Math.min(Math.max(parseInt(limit) || 15, 1), MAX_SCAN_LIMIT);
+
+  // Artificial delay for UX (3-6 seconds to simulate scanning)
+  const fakeDelay = 3000 + Math.random() * 3000;
+  await new Promise(r => setTimeout(r, fakeDelay));
+
+  // Query the master_leads database
+  // Use ILIKE for case-insensitive partial matching
+  let query = supabase
+    .from('master_leads')
+    .select('*')
+    .ilike('city', `%${cleanCity}%`)
+    .ilike('category', `%${cleanCategory}%`)
+    .not('phone', 'is', null)
+    .limit(cleanLimit);
+
+  const { data: masterResults, error: masterError } = await query;
+
+  if (masterError) {
+    console.error('Master query error:', masterError.message);
+    return res.status(500).json({ error: 'Database query failed' });
+  }
+
+  if (!masterResults || masterResults.length === 0) {
+    return res.json({ count: 0, leads: [] });
+  }
+
+  // Get existing leads for this user to avoid duplicates
+  const { data: existingLeads } = await supabase
+    .from('leads')
+    .select('name, city')
+    .eq('user_id', userId);
+  
+  const existingSet = new Set((existingLeads || []).map(l => `${l.name}|${l.city}`));
+
+  // Filter out duplicates and copy to user's leads table
+  const newLeads = masterResults.filter(ml => !existingSet.has(`${ml.name}|${ml.city}`));
+  
+  if (newLeads.length > 0) {
+    const leadsToInsert = newLeads.map(ml => ({
+      user_id: userId,
+      name: ml.name,
+      city: ml.city,
+      category: ml.category,
+      phone: ml.phone,
+      rating: ml.rating,
+      url: ml.url
+    }));
+
+    const { error: insertError } = await supabase.from('leads').insert(leadsToInsert);
+    if (insertError) {
+      console.error('Insert error:', insertError.message);
+    }
+  }
+
+  console.log(`🔍 Scan for "${cleanCategory}" in "${cleanCity}": ${newLeads.length} new leads served to user ${userId}`);
+  res.json({ count: newLeads.length, leads: newLeads });
+});
+
+// ============================================================
 // API: Get all leads for the authenticated user
 // ============================================================
 app.get('/api/leads', requireAuth, async (req, res) => {
