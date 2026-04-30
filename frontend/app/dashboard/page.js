@@ -52,7 +52,7 @@ export default function Dashboard() {
   const [scrapeMsg, setScrapeMsg] = useState('');
 
   // SECURITY: These limits are enforced in JS (not just HTML attributes)
-  const MAX_SCAN_LIMIT = isPro ? 200 : 50;
+  const MAX_SCAN_LIMIT = isPro ? 2000 : 50;
   const MIN_SCAN_LIMIT = 1;
 
   const fetchRealData = async (isRefresh = false, uid = null) => {
@@ -196,7 +196,11 @@ export default function Dashboard() {
     const enforcedLimit = Math.min(Math.max(parseInt(scrapeLimit) || 15, MIN_SCAN_LIMIT), MAX_SCAN_LIMIT);
     if (parseInt(scrapeLimit) !== enforcedLimit) {
       setScrapeLimit(enforcedLimit);
-      setScrapeMsg(`⚠️ Limit adjusted to ${enforcedLimit} (max allowed: ${MAX_SCAN_LIMIT}).`);
+      if (!isPro && parseInt(scrapeLimit) > 50) {
+        setScrapeMsg('⚠️ 50 is the maximum on the Free plan. Upgrade to Pro to scan up to 2000 profiles!');
+      } else {
+        setScrapeMsg(`⚠️ Limit adjusted to ${enforcedLimit} (max allowed: ${MAX_SCAN_LIMIT}).`);
+      }
       return;
     }
     
@@ -383,10 +387,16 @@ export default function Dashboard() {
                       className={styles.searchInput} 
                       value={scrapeLimit}
                       onChange={(e) => {
+                        setScrapeMsg(''); // Clear previous messages
                         // SECURITY: Clamp value in JS, not just HTML
                         const val = parseInt(e.target.value);
                         if (isNaN(val) || val < MIN_SCAN_LIMIT) setScrapeLimit(MIN_SCAN_LIMIT);
-                        else if (val > MAX_SCAN_LIMIT) setScrapeLimit(MAX_SCAN_LIMIT);
+                        else if (val > MAX_SCAN_LIMIT) {
+                          setScrapeLimit(MAX_SCAN_LIMIT);
+                          if (!isPro) {
+                            setScrapeMsg('⚠️ 50 is the maximum on the Free plan. Upgrade to Pro to scan up to 2000 profiles!');
+                          }
+                        }
                         else setScrapeLimit(val);
                       }}
                       min={MIN_SCAN_LIMIT}

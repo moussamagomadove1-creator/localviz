@@ -132,7 +132,7 @@ app.post('/api/scrape', requireAuth, async (req, res) => {
   const isPro = req.authenticatedUser.email === 'admin@localviz.com';
   
   // SECURITY: Cap the limit to prevent abuse
-  const MAX_SCAN_LIMIT = isPro ? 200 : 50;
+  const MAX_SCAN_LIMIT = isPro ? 2000 : 50;
   const cleanLimit = Math.min(Math.max(parseInt(limit) || 15, 1), MAX_SCAN_LIMIT);
   
   // SECURITY: Per-user scan cooldown & limits
