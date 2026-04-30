@@ -1,5 +1,55 @@
 [
   {
+    "name": "Boulangerie Roy Le Capitole",
+    "city": "Nice",
+    "category": "Boulangerie",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Boulangerie+Roy+Le+Capitole/data=!4m7!3m6!1s0x12cdd012acff93a7:0x71f8a3410799fcd!8m2!3d43.6946853!4d7.2540866!16s%2Fg%2F11btmb128h!19sChIJp5P_rBLQzRIRzZ95EDSKHwc?authuser=0&hl=en&rclk=1",
+    "address": "78 Rue de France, 06000 Nice",
+    "phone": "04 22 16 73 21",
+    "rating": "4.7"
+  },
+  {
+    "name": "Boulangerie Pâtisserie Albert Planchais",
+    "city": "Nice",
+    "category": "Boulangerie",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Boulangerie+P%C3%A2tisserie+Albert+Planchais/data=!4m7!3m6!1s0x12cddaa7f13766fb:0x6bd1c66f267eeca!8m2!3d43.7025723!4d7.2656633!16s%2Fg%2F11b73ytbs9!19sChIJ-2Y38afazRIRyu5n8mYcvQY?authuser=0&hl=en&rclk=1",
+    "address": "18 Rue de Russie, 06000 Nice",
+    "phone": "04 93 88 12 50",
+    "rating": "4.4"
+  },
+  {
+    "name": "Bakery Jean Marc Bordonnat 🥪🥐🥖",
+    "city": "Nice",
+    "category": "Boulangerie",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Bakery+Jean+Marc+Bordonnat+%F0%9F%A5%AA%F0%9F%A5%90%F0%9F%A5%96/data=!4m7!3m6!1s0x12cddab9dba5e45b:0xd82d95bc0fd83491!8m2!3d43.7018885!4d7.2833495!16s%2Fg%2F11bx1sly5t!19sChIJW-Sl27nazRIRkTTYD7yVLdg?authuser=0&hl=en&rclk=1",
+    "address": "19 Rue Barla, 06300 Nice",
+    "phone": "04 92 27 99 86",
+    "rating": "4.5"
+  },
+  {
+    "name": "Boulangerie Berlioz",
+    "city": "Nice",
+    "category": "Boulangerie",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Boulangerie+Berlioz/data=!4m7!3m6!1s0x12cdd181c0f0ef61:0x3cc0b2d75ae7ea5c!8m2!3d43.6993229!4d7.2591189!16s%2Fg%2F11h27220zb!19sChIJYe_wwIHRzRIRXOrnWteywDw?authuser=0&hl=en&rclk=1",
+    "address": "7 Rue Berlioz, 06000 Nice",
+    "phone": "04 23 20 84 95",
+    "rating": "4.7"
+  },
+  {
+    "name": "Aux Delices de la Buffa",
+    "city": "Nice",
+    "category": "Boulangerie",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Aux+Delices+de+la+Buffa/data=!4m7!3m6!1s0x12cdd00ba4956833:0x56ed7a1fcfd4587c!8m2!3d43.6971079!4d7.2617583!16s%2Fg%2F1v_x6n5w!19sChIJM2iVpAvQzRIRfFjUzx967VY?authuser=0&hl=en&rclk=1",
+    "address": "20 Rue de la Buffa, 06000 Nice",
+    "phone": "06 66 56 38 23",
+    "rating": "4.6"
+  },
+  {
     "name": "Artisans Associes serrurier paris 2",
     "city": "Paris",
     "category": "Serrurier",

@@ -1,16 +1,14 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const cron = require('node-cron');
 const fs = require('fs');
 const path = require('path');
-const { runScraperQueue } = require('./src/scraper');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '5mb' }));
 
 // In-memory leads storage (loaded from file on start if available)
 let leadsStore = [];
@@ -23,32 +21,81 @@ try {
   console.log('No existing leads file, starting fresh.');
 }
 
-// Export so scraper.js can push leads here too
-module.exports.leadsStore = leadsStore;
-module.exports.addLead = function(lead) {
-  if (!leadsStore.some(e => e.name === lead.name && e.city === lead.city)) {
-    leadsStore.unshift(lead);
-    // Persist to file
-    try {
-      fs.writeFileSync(path.join(__dirname, 'leads_data.json'), JSON.stringify(leadsStore, null, 2));
-    } catch(e) {}
-  }
-};
+// ============================================================
+// JOB QUEUE - Website creates jobs, local PC executes them
+// ============================================================
+let jobQueue = [];
+let jobIdCounter = 1;
 
-// API route to manually trigger a scrape
-app.post('/api/scrape', async (req, res) => {
+// Website calls this to start a scan → creates a job for the local worker
+app.post('/api/scrape', (req, res) => {
   const { city, category, limit } = req.body;
   if (!city || !category) {
     return res.status(400).json({ error: 'City and category are required' });
   }
+  const job = {
+    id: jobIdCounter++,
+    city,
+    category,
+    limit: limit || 15,
+    status: 'pending',    // pending → running → done
+    count: 0,
+    createdAt: new Date()
+  };
+  jobQueue.push(job);
+  console.log(`📋 Job #${job.id} created: ${category} in ${city} (limit: ${job.limit})`);
+  res.json({ message: 'Scan queued', jobId: job.id, status: 'pending' });
+});
 
-  try {
-    const totalFound = await runScraperQueue([{ city, category, limit: limit || 15 }]);
-    res.json({ message: `Scan completed`, count: totalFound });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Scraping failed' });
+// Local worker polls this to get pending jobs
+app.get('/api/jobs/pending', (req, res) => {
+  const pending = jobQueue.find(j => j.status === 'pending');
+  if (pending) {
+    pending.status = 'running';
+    console.log(`🔄 Job #${pending.id} picked up by local worker`);
+    res.json(pending);
+  } else {
+    res.json(null);
   }
+});
+
+// Local worker calls this when a job is done
+app.post('/api/jobs/:id/complete', (req, res) => {
+  const jobId = parseInt(req.params.id);
+  const { count, leads } = req.body;
+  const job = jobQueue.find(j => j.id === jobId);
+  if (!job) return res.status(404).json({ error: 'Job not found' });
+  
+  job.status = 'done';
+  job.count = count || 0;
+  console.log(`✅ Job #${job.id} completed: ${job.count} leads found`);
+
+  // Add leads to store
+  if (leads && Array.isArray(leads)) {
+    let added = 0;
+    for (const lead of leads) {
+      if (!leadsStore.some(e => e.name === lead.name && e.city === lead.city)) {
+        leadsStore.unshift(lead);
+        added++;
+      }
+    }
+    if (added > 0) {
+      try {
+        fs.writeFileSync(path.join(__dirname, 'leads_data.json'), JSON.stringify(leadsStore, null, 2));
+      } catch(e) {}
+    }
+    console.log(`💾 ${added} new leads saved (total: ${leadsStore.length})`);
+  }
+
+  res.json({ message: 'Job completed', count: job.count });
+});
+
+// Frontend polls this to check scan progress
+app.get('/api/jobs/:id/status', (req, res) => {
+  const jobId = parseInt(req.params.id);
+  const job = jobQueue.find(j => j.id === jobId);
+  if (!job) return res.status(404).json({ error: 'Job not found' });
+  res.json({ status: job.status, count: job.count });
 });
 
 // API route to get all leads
@@ -69,9 +116,7 @@ app.post('/api/leads/push', (req, res) => {
       added++;
     }
   }
-  // Persist
   try {
-    const path = require('path');
     fs.writeFileSync(path.join(__dirname, 'leads_data.json'), JSON.stringify(leadsStore, null, 2));
   } catch(e) {}
   res.json({ message: `${added} new leads added`, total: leadsStore.length });
@@ -79,20 +124,10 @@ app.post('/api/leads/push', (req, res) => {
 
 // Health check
 app.get('/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date(), leadsCount: leadsStore.length });
+  res.json({ status: 'ok', timestamp: new Date(), leadsCount: leadsStore.length, pendingJobs: jobQueue.filter(j => j.status === 'pending').length });
 });
-
-// Cron disabled on free tier (512MB RAM limit)
-// Uncomment on a paid plan with more memory
-// cron.schedule('0 3 * * *', () => {
-//   console.log('Running daily scheduled scraper...');
-//   const targets = [
-//     { city: 'Paris', category: 'Plumber' },
-//     { city: 'Lyon', category: 'Bakery' },
-//   ];
-//   runScraperQueue(targets).catch(console.error);
-// });
 
 app.listen(PORT, () => {
   console.log(`Scraper service running on port ${PORT}`);
+  console.log(`Waiting for local worker to connect...`);
 });

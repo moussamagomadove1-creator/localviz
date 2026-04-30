@@ -170,56 +170,75 @@ export default function Dashboard() {
     setScanResult(null);
     setLiveCount(0);
 
-    const initialLen = businesses.length;
-
     const msgs = [
-      "Establishing secure connection to maps...",
-      "Bypassing geographical limitations...",
+      "Job queued on server...",
+      "Waiting for local worker to pick up...",
       `Scanning region for ${scrapeCategory}...`,
       "Filtering out businesses with existing websites...",
       "Extracting contact details and ratings...",
-      "Finalizing extraction..."
+      "Worker is processing data..."
     ];
     let msgIdx = 0;
     setScrapeMsg(msgs[0]);
-    const intv = setInterval(async () => {
+
+    // Interval to cycle through scanning messages
+    const msgIntv = setInterval(() => {
       msgIdx++;
       if (msgIdx < msgs.length) setScrapeMsg(msgs[msgIdx]);
-      else msgIdx = 0; // loop messages
-      
-      // Real time update check
-      try {
-        const r = await fetch('/demo_leads.json?t=' + Date.now());
-        if (r.ok) {
-           const d = await r.json();
-           if (d.length > initialLen) {
-             setLiveCount(d.length - initialLen);
-           }
-        }
-      } catch(e){}
-    }, 3000);
-    
+      else msgIdx = 2; // Loop the active scanning messages
+    }, 4000);
+
     try {
+      // 1. Create the job on the server
       const res = await fetch(`${API_URL}/api/scrape`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ city: scrapeCity, category: scrapeCategory, limit: parseInt(scrapeLimit) })
       });
-      clearInterval(intv);
-      if (res.ok) {
-        const data = await res.json();
-        setScanResult(data.count);
-        setScanState('done');
-      } else {
-        setScrapeMsg('Error launching scan.');
+
+      if (!res.ok) {
+        clearInterval(msgIntv);
+        setScrapeMsg('Error launching scan on server.');
         setScanState('idle');
+        setScraping(false);
+        return;
       }
+
+      const { jobId } = await res.json();
+      
+      // 2. Poll the job status until it's done
+      const pollIntv = setInterval(async () => {
+        try {
+          const statusRes = await fetch(`${API_URL}/api/jobs/${jobId}/status`);
+          if (statusRes.ok) {
+            const data = await statusRes.json();
+            
+            // Provide feedback based on job status
+            if (data.status === 'running') {
+              setScrapeMsg(`Local worker is actively scanning...`);
+            }
+
+            if (data.status === 'done') {
+              clearInterval(msgIntv);
+              clearInterval(pollIntv);
+              setScanResult(data.count);
+              setScanState('done');
+              setScraping(false);
+              // Refresh data from the server
+              fetchRealData(true);
+            }
+          }
+        } catch (pollErr) {
+          console.error("Polling error", pollErr);
+        }
+      }, 3000);
+
     } catch (err) {
-      clearInterval(intv);
+      clearInterval(msgIntv);
       setScrapeMsg('Could not connect to backend scraper. The server may be starting up, try again in 30 seconds.');
       setScanState('idle');
+      setScraping(false);
     }
-    setScraping(false);
   };
 
   const sourceData = currentView === 'saved' ? savedLeads : businesses;
