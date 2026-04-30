@@ -663,8 +663,8 @@
     display: block;
     position: fixed;
     top: 1rem;
-    left: 1rem;
-    z-index: 40;
+    right: 1rem;
+    z-index: 60;
   }
 
   .desktopLogo {
