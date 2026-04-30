@@ -19,6 +19,8 @@ const Icons = {
   Filter: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
 };
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+
 export default function Dashboard() {
   const [currentView, setCurrentView] = useState('overview');
   const [businesses, setBusinesses] = useState([]);
@@ -44,6 +46,21 @@ export default function Dashboard() {
   const [scrapeMsg, setScrapeMsg] = useState('');
 
   const fetchRealData = async (isRefresh = false) => {
+    try {
+      // Try fetching from the backend API first
+      const apiRes = await fetch(`${API_URL}/api/leads`).catch(() => null);
+      if (apiRes && apiRes.ok) {
+        const apiData = await apiRes.json();
+        if (apiData && apiData.length > 0) {
+          setBusinesses(apiData);
+          if (!isRefresh) setTimeout(() => setLoading(false), 800);
+          return;
+        }
+      }
+    } catch(e) {
+      console.log('API not reachable, falling back to local data');
+    }
+    // Fallback to local demo_leads.json
     try {
       const res = await fetch('/demo_leads.json?t=' + Date.now());
       if (res.ok) {
@@ -183,7 +200,7 @@ export default function Dashboard() {
     }, 3000);
     
     try {
-      const res = await fetch('http://localhost:4000/api/scrape', {
+      const res = await fetch(`${API_URL}/api/scrape`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ city: scrapeCity, category: scrapeCategory, limit: parseInt(scrapeLimit) })
@@ -199,7 +216,7 @@ export default function Dashboard() {
       }
     } catch (err) {
       clearInterval(intv);
-      setScrapeMsg('Could not connect to backend scraper. Is it running on port 4000?');
+      setScrapeMsg('Could not connect to backend scraper. The server may be starting up, try again in 30 seconds.');
       setScanState('idle');
     }
     setScraping(false);

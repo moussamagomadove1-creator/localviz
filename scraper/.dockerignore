@@ -1,0 +1,4 @@
+node_modules/
+debug_scraper.png
+.env
+*.log
