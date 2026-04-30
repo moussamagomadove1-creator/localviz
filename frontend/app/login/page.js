@@ -49,7 +49,7 @@ export default function Login() {
         <h1 className={styles.title}>Welcome back</h1>
         <p className={styles.subtitle}>Sign in to access your LocalViz dashboard.</p>
 
-        <form className={styles.form} onSubmit={handleLogin}>
+        <form className={styles.form} onSubmit={(e) => handleAuth(e, false)}>
           <div className={styles.inputGroup}>
             <label className={styles.label} htmlFor="email">Email</label>
             <input 
