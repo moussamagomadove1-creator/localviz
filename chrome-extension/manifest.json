@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "LocalViz Scraper",
+  "version": "1.0",
+  "description": "Scraping engine for LocalViz.",
+  "permissions": [
+    "tabs",
+    "windows"
+  ],
+  "host_permissions": [
+    "*://*.google.com/maps/*",
+    "*://*.google.fr/maps/*",
+    "https://localviz.vercel.app/*",
+    "http://localhost:3000/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://localviz.vercel.app/*",
+        "http://localhost:3000/*"
+      ],
+      "js": ["content-site.js"]
+    },
+    {
+      "matches": [
+        "*://*.google.com/maps/*",
+        "*://*.google.fr/maps/*"
+      ],
+      "js": ["content-maps.js"]
+    }
+  ]
+}

@@ -50,6 +50,7 @@ export default function Dashboard() {
   const [scrapeLimit, setScrapeLimit] = useState(15);
   const [scraping, setScraping] = useState(false);
   const [scrapeMsg, setScrapeMsg] = useState('');
+  const [hasExtension, setHasExtension] = useState(true);
 
   // SECURITY: These limits are enforced in JS (not just HTML attributes)
   const MAX_SCAN_LIMIT = isPro ? 999999 : 50;
@@ -131,7 +132,47 @@ export default function Dashboard() {
       } catch (e) {}
     }
 
-    // Note: fetchRealData is now called inside checkUser()
+    // Check if extension is installed
+    setTimeout(() => {
+      setHasExtension(!!document.getElementById('localviz-extension-installed'));
+    }, 500);
+
+    // Listen for messages from the Chrome Extension
+    const handleMessage = async (event) => {
+      if (event.source !== window) return;
+      
+      if (event.data.type === 'LOCALVIZ_SCAN_PROGRESS') {
+        setScrapeMsg(event.data.payload.status || 'Scanning in background...');
+        setLiveCount(event.data.payload.count || 0);
+      }
+      
+      if (event.data.type === 'LOCALVIZ_SCAN_COMPLETE') {
+        const { leads } = event.data.payload;
+        setScanResult(leads.length);
+        setScanState('done');
+        setScraping(false);
+        setScrapeMsg('Scan complete! Saving leads...');
+        
+        // Save to Supabase directly
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session && leads.length > 0) {
+          const userLeads = leads.map(l => ({ ...l, user_id: session.user.id }));
+          const { error } = await supabase.from('leads').upsert(userLeads, { onConflict: 'name,city', ignoreDuplicates: true });
+          if (error) console.error("Error saving leads", error);
+        }
+        
+        fetchRealData(true);
+      }
+      
+      if (event.data.type === 'LOCALVIZ_SCAN_ERROR') {
+        setScrapeMsg(event.data.payload.error || 'Scan failed.');
+        setScanState('idle');
+        setScraping(false);
+      }
+    };
+    
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
   }, []);
 
   const viewResults = async () => {
@@ -219,95 +260,18 @@ export default function Dashboard() {
     setScanResult(null);
     setLiveCount(0);
 
-    const msgs = [
-      "Job queued on server...",
-      "Waiting for local worker to pick up...",
-      `Scanning region for ${scrapeCategory}...`,
-      "Filtering out businesses with existing websites...",
-      "Extracting contact details and ratings...",
-      "Worker is processing data..."
-    ];
-    let msgIdx = 0;
-    setScrapeMsg(msgs[0]);
+    setScrapeMsg("Starting Chrome Extension Scraper...");
 
-    // Interval to cycle through scanning messages
-    const msgIntv = setInterval(() => {
-      msgIdx++;
-      if (msgIdx < msgs.length) setScrapeMsg(msgs[msgIdx]);
-      else msgIdx = 2; // Loop the active scanning messages
-    }, 4000);
-
-    try {
-      // SECURITY: Get fresh JWT token
-      const { data: { session } } = await supabase.auth.getSession();
-      const token = session?.access_token;
-      if (!token) {
-        clearInterval(msgIntv);
-        setScrapeMsg('Session expired. Please log in again.');
-        setScanState('idle');
-        setScraping(false);
-        return;
+    // Send message to extension
+    window.postMessage({
+      type: 'LOCALVIZ_START_SCAN',
+      payload: {
+        city: scrapeCity.trim(),
+        category: scrapeCategory.trim(),
+        limit: enforcedLimit
       }
-      
-      // 1. Create the job on the server
-      const res = await fetch(`${API_URL}/api/scrape`, {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ city: scrapeCity.trim(), category: scrapeCategory.trim(), limit: enforcedLimit })
-      });
+    }, '*');
 
-      if (!res.ok) {
-        clearInterval(msgIntv);
-        const errData = await res.json().catch(() => null);
-        setScrapeMsg(errData?.error || 'Error launching scan on server.');
-        setScanState('idle');
-        setScraping(false);
-        return;
-      }
-
-      const { jobId } = await res.json();
-      
-      // 2. Poll the job status until it's done
-      const pollIntv = setInterval(async () => {
-        try {
-          const statusRes = await fetch(`${API_URL}/api/jobs/${jobId}/status`);
-          if (statusRes.ok) {
-            const statusData = await statusRes.json();
-            
-            if (statusData.status === 'running') {
-              setScrapeMsg(`Local worker is actively scanning...`);
-            }
-
-            if (statusData.status === 'done') {
-              clearInterval(msgIntv);
-              clearInterval(pollIntv);
-              setScanResult(statusData.count);
-              setScanState('done');
-              setScraping(false);
-              // Refresh data from the server
-              fetchRealData(true);
-            }
-          } else if (statusRes.status === 404) {
-            clearInterval(msgIntv);
-            clearInterval(pollIntv);
-            setScrapeMsg('Scan interrupted. The server restarted or the job was lost. Please try again.');
-            setScanState('idle');
-            setScraping(false);
-          }
-        } catch (pollErr) {
-          console.error("Polling error", pollErr);
-        }
-      }, 3000);
-
-    } catch (err) {
-      clearInterval(msgIntv);
-      setScrapeMsg('Could not connect to backend scraper. The server may be starting up, try again in 30 seconds.');
-      setScanState('idle');
-      setScraping(false);
-    }
   };
 
   const sourceData = currentView === 'saved' ? savedLeads : businesses;
@@ -411,8 +375,23 @@ export default function Dashboard() {
                     />
                   </div>
                 </div>
-                <button type="submit" className="btn-primary" disabled={scraping} style={{ width: '100%', marginTop: '1rem', height: '48px' }}>
-                  Start Extraction
+                {!hasExtension && (
+                  <div style={{ marginTop: '1rem', padding: '1rem', background: 'rgba(255,50,50,0.1)', border: '1px solid rgba(255,50,50,0.3)', borderRadius: '8px', textAlign: 'center' }}>
+                    <p style={{ color: '#ff6b6b', margin: '0 0 10px 0', fontSize: '0.9rem' }}>
+                      ⚠️ <strong>Extension requise:</strong> Vous devez installer l'extension Chrome LocalViz pour scraper Google Maps de façon transparente.
+                    </p>
+                    <button 
+                      type="button"
+                      style={{ padding: '0.5rem 1rem', background: '#ff6b6b', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
+                      onClick={() => alert("Pour installer : allez dans chrome://extensions, activez le mode développeur, et cliquez sur 'Charger l'extension non empaquetée' puis sélectionnez le dossier chrome-extension.")}
+                    >
+                      Comment installer l'extension ?
+                    </button>
+                  </div>
+                )}
+                
+                <button type="submit" className="btn-primary" disabled={scraping || !hasExtension} style={{ width: '100%', marginTop: '1rem', height: '48px', opacity: hasExtension ? 1 : 0.5 }}>
+                  {scraping ? 'Scan in Progress...' : 'Start Extraction'}
                 </button>
                 {scrapeMsg && <p style={{ marginTop: '1.5rem', color: scrapeMsg.includes('Could not') ? '#f87171' : 'var(--accent-green)', fontSize: '0.875rem', textAlign: 'center', fontWeight: 500 }}>{scrapeMsg}</p>}
               </form>
