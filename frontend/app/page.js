@@ -104,7 +104,7 @@ export default function Home() {
               </a>
             </div>
             <div className={styles.freeTag}>
-              <span className={styles.freeTagGold}>Free</span> · 3 scans included to get started
+              <span className={styles.freeTagGold}>Free</span> · No credit card required
             </div>
           </div>
 
@@ -215,7 +215,7 @@ export default function Home() {
             </div>
             <div>
               <div className={styles.statsNumber}>Free</div>
-              <div className={styles.statsLabel}>3 scans to start</div>
+              <div className={styles.statsLabel}>to get started</div>
             </div>
             <div>
               <div className={styles.statsNumber}>CSV</div>
@@ -243,12 +243,12 @@ export default function Home() {
                 <div className={styles.planPrice}>$0<small className={styles.planPriceSub}>/forever</small></div>
                 <p className={styles.planTag}>Try LocalViz risk-free</p>
                 <ul className={styles.planFeatures}>
-                  <li>3 scans included</li>
-                  <li>Up to 20 leads per scan</li>
+                  <li>5 leads visible per scan</li>
+                  <li>Up to 20 profiles scanned</li>
                   <li>Basic category filters</li>
                   <li>Manual CSV export</li>
                 </ul>
-                <Link href="/login" className={`btn-secondary ${styles.planBtn}`}>Get Started Free</Link>
+                <Link href="/signup" className={`btn-secondary ${styles.planBtn}`}>Get Started Free</Link>
               </div>
 
               {/* Pro */}
@@ -264,7 +264,7 @@ export default function Home() {
                   <li>1-click export to CSV/Excel</li>
                   <li>Priority 24/7 support</li>
                 </ul>
-                <Link href="/login" className={`btn-primary ${styles.planBtn}`}>Subscribe to Pro</Link>
+                <Link href="/signup" className={`btn-primary ${styles.planBtn}`}>Subscribe to Pro</Link>
               </div>
 
               {/* Agency */}
@@ -279,7 +279,7 @@ export default function Home() {
                   <li>Team accounts (up to 5)</li>
                   <li>Dedicated account manager</li>
                 </ul>
-                <Link href="/login" className={`btn-secondary ${styles.planBtn}`}>Contact Sales</Link>
+                <Link href="/signup" className={`btn-secondary ${styles.planBtn}`}>Contact Sales</Link>
               </div>
             </div>
           </div>
@@ -297,7 +297,7 @@ export default function Home() {
                 Free forever plan. No credit card required. Start finding clients in under 2 minutes.
               </p>
               <div className={styles.ctaRow} style={{ animationDelay: '0s' }}>
-                <Link href="/login" className="btn-primary" style={{ padding: '13px 24px' }}>Get Started Now →</Link>
+                <Link href="/signup" className="btn-primary" style={{ padding: '13px 24px' }}>Get Started Now →</Link>
                 <a href="#features" className="btn-secondary" style={{ padding: '13px 24px' }}>Learn More</a>
               </div>
             </div>

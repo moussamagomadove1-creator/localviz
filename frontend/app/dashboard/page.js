@@ -448,12 +448,12 @@ export default function Dashboard() {
             {isPro ? 'You have full access to all features and unlimited leads.' : 'You are currently on the Free Plan.'}
           </p>
           <div style={{ fontSize: '3.5rem', fontWeight: 900, marginBottom: '1rem', fontFamily: 'var(--font-display)' }}>
-            {isPro ? '€50' : '€0'}<span style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>/mo</span>
+            {isPro ? '$59' : '$0'}<span style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>/mo</span>
           </div>
           <p style={{ color: 'var(--text-secondary)', marginBottom: '2.5rem', padding: '1rem', background: 'rgba(0,0,0,0.2)', borderRadius: '8px' }}>
-            {isPro ? 'Limit: Unlimited leads per scan.' : 'Limit: Display maximum 3 leads per scan.'}
+            {isPro ? 'Limit: Unlimited leads per scan.' : 'Limit: Display up to 5 leads per scan. Upgrade for unlimited access.'}
           </p>
-          {!isPro && <button className="btn-primary" style={{ width: '100%', height: '48px' }}>Upgrade to Pro (€50/mo)</button>}
+          {!isPro && <button className="btn-primary" style={{ width: '100%', height: '48px' }}>Upgrade to Pro ($59/mo)</button>}
           {isPro && <button className="btn-secondary" style={{ width: '100%', borderColor: 'var(--accent-green)', color: 'var(--accent-green)', height: '48px' }}><Icons.Check /> Active Subscription</button>}
         </div>
       );
@@ -497,7 +497,7 @@ export default function Dashboard() {
             <div className={styles.freeLimitWarning}>
               <Icons.Alert />
               <div>
-                <strong>You are on the Free plan.</strong> Showing only 3 results. Upgrade to Pro to see the full list of qualified leads!
+                <strong>You are on the Free plan.</strong> Showing only {FREE_LIMIT} results. Upgrade to Pro to see the full list of qualified leads!
               </div>
             </div>
           )}

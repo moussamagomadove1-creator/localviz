@@ -1,5 +1,265 @@
 [
   {
+    "name": "Flash Auto",
+    "city": "Bordeaux",
+    "category": "Garage Auto",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Flash+Auto/data=!4m7!3m6!1s0xd55264ca62098bb:0x2a4b14c6a5e85bcc!8m2!3d44.8256556!4d-0.5629684!16s%2Fg%2F11b6dwgf8g!19sChIJu5ggpkwmVQ0RzFvopcYUSyo?authuser=0&hl=en&rclk=1",
+    "address": "26 Rue Vilaris, 33800 Bordeaux",
+    "phone": "05 56 94 77 80",
+    "rating": "4.5"
+  },
+  {
+    "name": "Garage Mercier",
+    "city": "Bordeaux",
+    "category": "Garage Auto",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Garage+Mercier/data=!4m7!3m6!1s0xd552624bc5f8c13:0x56a6bf28ee6f5f16!8m2!3d44.8408634!4d-0.5503762!16s%2Fg%2F1tdzbrc9!19sChIJE4xfvCQmVQ0RFl9v7ii_plY?authuser=0&hl=en&rclk=1",
+    "address": "166 Rue de la Benauge, 33100 Bordeaux",
+    "phone": "05 56 86 21 33",
+    "rating": "4.7"
+  },
+  {
+    "name": "Auto Center Meriadeck",
+    "city": "Bordeaux",
+    "category": "Garage Auto",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Auto+Center+Meriadeck/data=!4m7!3m6!1s0xd5527ef5a9c3bff:0x4138170b5fa44a6b!8m2!3d44.839297!4d-0.5879539!16s%2Fg%2F1wn34_d8!19sChIJ_zucWu8nVQ0Ra0qkXwsXOEE?authuser=0&hl=en&rclk=1",
+    "address": "141 Rue Georges Bonnac, 33000 Bordeaux",
+    "phone": "05 56 93 11 60",
+    "rating": "3.5"
+  },
+  {
+    "name": "Centrale De L' Automobile",
+    "city": "Bordeaux",
+    "category": "Garage Auto",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Centrale+De+L%27+Automobile/data=!4m7!3m6!1s0xd5528a17a9a3781:0xa98dfd5e1bc66b5!8m2!3d44.8533977!4d-0.5416705!16s%2Fg%2F11j2yq7r0y!19sChIJgTeaeqEoVQ0RtWa84dXfmAo?authuser=0&hl=en&rclk=1",
+    "address": "69 Rue des Vivants, 33100 Bordeaux",
+    "phone": "05 56 86 49 60",
+    "rating": "3.7"
+  },
+  {
+    "name": "Garage Laurent Frances",
+    "city": "Bordeaux",
+    "category": "Garage Auto",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Garage+Laurent+Frances/data=!4m7!3m6!1s0xd5526237c73eac1:0x6733b99067b1a910!8m2!3d44.8418368!4d-0.549147!16s%2Fg%2F11bzz3qxnt!19sChIJwepzfCMmVQ0REKmxZ5C5M2c?authuser=0&hl=en&rclk=1",
+    "address": "82 Cr le Rouzic, 33100 Bordeaux",
+    "phone": "05 56 40 20 89",
+    "rating": "4.7"
+  },
+  {
+    "name": "Garage du Futur",
+    "city": "Bordeaux",
+    "category": "Garage Auto",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Garage+du+Futur/data=!4m7!3m6!1s0xd5527af644cbff3:0xde29a4323228b411!8m2!3d44.8179205!4d-0.5726321!16s%2Fg%2F11btm0bjqm!19sChIJ879MZK8nVQ0REbQoMjKkKd4?authuser=0&hl=en&rclk=1",
+    "address": "307 Cr de la Somme, 33800 Bordeaux",
+    "phone": "05 56 94 10 47",
+    "rating": "3.8"
+  },
+  {
+    "name": "Garage Pascal Perez",
+    "city": "Bordeaux",
+    "category": "Garage Auto",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Garage+Pascal+Perez/data=!4m7!3m6!1s0xd5527b0e6ccc677:0x4bc115f5b20b76e9!8m2!3d44.8243387!4d-0.5710832!16s%2Fg%2F1tl8m0fd!19sChIJd8bM5rAnVQ0R6XYLsvUVwUs?authuser=0&hl=en&rclk=1",
+    "address": "29 Rue Pascal Mothes, 33800 Bordeaux",
+    "phone": "05 56 92 76 70",
+    "rating": "4.2"
+  },
+  {
+    "name": "Garage Carriere",
+    "city": "Bordeaux",
+    "category": "Garage Auto",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Garage+Carriere/data=!4m7!3m6!1s0xd55264ec69a0083:0xa9db37e5bc7b5537!8m2!3d44.8249199!4d-0.5575406!16s%2Fg%2F1thnq2v2!19sChIJgwCaxk4mVQ0RN1V7vOU326k?authuser=0&hl=en&rclk=1",
+    "address": "37 Rue Charles Domercq, 33800 Bordeaux",
+    "phone": "05 56 92 56 05",
+    "rating": "4.9"
+  },
+  {
+    "name": "Ets Pierre Bouteville",
+    "city": "Bordeaux",
+    "category": "Garage Auto",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Ets+Pierre+Bouteville/data=!4m7!3m6!1s0xd5528f06a441689:0x7923152f802215a1!8m2!3d44.8759103!4d-0.5557522!16s%2Fg%2F1tm13y7p!19sChIJiRZEavAoVQ0RoRUigC8VI3k?authuser=0&hl=en&rclk=1",
+    "address": "Rue Suffren, 33300 Bordeaux",
+    "phone": "05 56 50 58 32",
+    "rating": "3.7"
+  },
+  {
+    "name": "G.T.R. 33",
+    "city": "Bordeaux",
+    "category": "Garage Auto",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/G.T.R.+33/data=!4m7!3m6!1s0xd54d7f9732199e1:0x2cc6af8c56f20a3a!8m2!3d44.8523898!4d-0.6080721!16s%2Fg%2F11b6djnxvh!19sChIJ4Zkhc_nXVA0ROgryVoyvxiw?authuser=0&hl=en&rclk=1",
+    "address": "47 Av. du Général Leclerc, 33200 Bordeaux",
+    "phone": "05 56 02 85 42",
+    "rating": "4.3"
+  },
+  {
+    "name": "Garage Alvarez - Station le Vigean",
+    "city": "Bordeaux",
+    "category": "Garage Auto",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Garage+Alvarez+-+Station+le+Vigean/data=!4m7!3m6!1s0xd54d7d326bc903d:0x25dca4327301de8c!8m2!3d44.8855219!4d-0.6082856!16s%2Fg%2F1ttq3f6j!19sChIJPZC8JtPXVA0RjN4BczKk3CU?authuser=0&hl=en&rclk=1",
+    "address": "12 Bis Rue Louis Fleuranceau, 33520 Bruges",
+    "phone": "05 56 43 10 83",
+    "rating": "4.5"
+  },
+  {
+    "name": "BORDEAUX CASSE",
+    "city": "Bordeaux",
+    "category": "Garage Auto",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/BORDEAUX+CASSE/data=!4m7!3m6!1s0xd55291eeacaf2d3:0x12afaf24fc6cfccf!8m2!3d44.8904233!4d-0.5479861!16s%2Fg%2F11fzf2nc2y!19sChIJ0_LK6h4pVQ0Rz_xs_CSvrxI?authuser=0&hl=en&rclk=1",
+    "address": "48 Rue Pierre Baour, 33300 Bordeaux",
+    "phone": "05 56 80 80 80",
+    "rating": "4.6"
+  },
+  {
+    "name": "Diagnostic automobile bordeaux",
+    "city": "Bordeaux",
+    "category": "Garage Auto",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Diagnostic+automobile+bordeaux/data=!4m7!3m6!1s0xc73c8738edf353f:0x4027f35cbb745cb!8m2!3d44.840889!4d-0.5050306!16s%2Fg%2F11tsv0mpsn!19sChIJPzXfjnPIcwwRy0W3yzV_AgQ?authuser=0&hl=en&rclk=1",
+    "address": "25 Av. des Mondaults, 33270 Floirac",
+    "phone": "06 61 02 89 17",
+    "rating": "5.0"
+  },
+  {
+    "name": "Excellence Automobile",
+    "city": "Bordeaux",
+    "category": "Garage Auto",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Excellence+Automobile/data=!4m7!3m6!1s0xd552620053a5107:0x4c26e1f4e56a2683!8m2!3d44.8488847!4d-0.5453886!16s%2Fg%2F11b6d5lqr6!19sChIJB1E6BSAmVQ0RgyZq5fThJkw?authuser=0&hl=en&rclk=1",
+    "address": "279 Av. Thiers, 33100 Bordeaux",
+    "phone": "05 56 86 00 56",
+    "rating": "3.2"
+  },
+  {
+    "name": "Aquitaine rechange auto",
+    "city": "Bordeaux",
+    "category": "Garage Auto",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Aquitaine+rechange+auto/data=!4m7!3m6!1s0xd5528e46f0abc85:0x2237c32aa3280b27!8m2!3d44.8886427!4d-0.5486769!16s%2Fg%2F11b6c62x3f!19sChIJhbwKb-QoVQ0RJwsooyrDNyI?authuser=0&hl=en&rclk=1",
+    "address": "249 Av. de Labarde, 33300 Bordeaux",
+    "phone": "05 56 37 25 74",
+    "rating": "4.3"
+  },
+  {
+    "name": "CARROSSERIE LAOUE",
+    "city": "Bordeaux",
+    "category": "Garage Auto",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/CARROSSERIE+LAOUE/data=!4m7!3m6!1s0xd55289d592b795d:0xdfb499faf5c42ca7!8m2!3d44.8493539!4d-0.5528803!16s%2Fg%2F1tmxxxsq!19sChIJXXkrWZ0oVQ0RpyzE9fqZtN8?authuser=0&hl=en&rclk=1",
+    "address": "77 Rue Bouthier, 33100 Bordeaux",
+    "phone": "05 56 86 50 21",
+    "rating": "4.8"
+  },
+  {
+    "name": "Buhler",
+    "city": "Bordeaux",
+    "category": "Garage Auto",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Buhler/data=!4m7!3m6!1s0xd55280e1fcc25c1:0xc33e73a521ef6036!8m2!3d44.8585766!4d-0.5886639!16s%2Fg%2F1thkt08f!19sChIJwSXMHw4oVQ0RNmDvIaVzPsM?authuser=0&hl=en&rclk=1",
+    "address": "268 Rue Mandron, 33000 Bordeaux",
+    "phone": "05 57 19 09 29",
+    "rating": "4.1"
+  },
+  {
+    "name": "CLR location voiture bordeaux Rent car",
+    "city": "Bordeaux",
+    "category": "Garage Auto",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/CLR+location+voiture+bordeaux+Rent+car/data=!4m7!3m6!1s0xd552742a1022acd:0x8d1dcfc96a3a5bf0!8m2!3d44.8438462!4d-0.5751719!16s%2Fg%2F11b61q_yrf!19sChIJzSoCoUInVQ0R8Fs6asnPHY0?authuser=0&hl=en&rclk=1",
+    "address": "5 All. de Tourny, 33000 Bordeaux",
+    "phone": "07 51 86 76 76",
+    "rating": "4.9"
+  },
+  {
+    "name": "L'Atelier du Rétro - Garage Moto à Bordeaux de restauration",
+    "city": "Bordeaux",
+    "category": "Garage Auto",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/L%27Atelier+du+R%C3%A9tro+-+Garage+Moto+%C3%A0+Bordeaux+de+restauration,+pr%C3%A9paration+et+entretien/data=!4m7!3m6!1s0xd55297f20038107:0x54733c5769d4023f!8m2!3d44.8539964!4d-0.5943512!16s%2Fg%2F11tsd9q0fx!19sChIJB4EDIH8pVQ0RPwLUaVc8c1Q?authuser=0&hl=en&rclk=1",
+    "address": "13 Rue Laharpe, 33110 Le Bouscat",
+    "phone": "06 70 50 51 37",
+    "rating": "5.0"
+  },
+  {
+    "name": "Bordeaux Maritime Carrosserie",
+    "city": "Bordeaux",
+    "category": "Garage Auto",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Bordeaux+Maritime+Carrosserie/data=!4m7!3m6!1s0xd552900b31aa67f:0x8ce1dab950c1aca3!8m2!3d44.8675746!4d-0.5497153!16s%2Fg%2F11gmj_0g5r!19sChIJf6YaswApVQ0Ro6zBULna4Yw?authuser=0&hl=en&rclk=1",
+    "address": "24 Rue Pourmann, 33300 Bordeaux",
+    "phone": "06 81 85 49 42",
+    "rating": "5.0"
+  },
+  {
+    "name": "PG AUTO",
+    "city": "Bordeaux",
+    "category": "Garage Auto",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/PG+AUTO/data=!4m7!3m6!1s0xd5527cc124658ad:0x91b179b7ef51242e!8m2!3d44.8356334!4d-0.5672214!16s%2Fg%2F11c2nr5_l4!19sChIJrVhGEswnVQ0RLiRR77d5sZE?authuser=0&hl=en&rclk=1",
+    "address": "24 Cr Victor Hugo, 33000 Bordeaux",
+    "phone": "05 47 33 01 95",
+    "rating": "3.5"
+  },
+  {
+    "name": "Auto Assil Alg24",
+    "city": "Bordeaux",
+    "category": "Garage Auto",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Auto+Assil+Alg24/data=!4m7!3m6!1s0xd55295540cd33ad:0x6a4b9f0b718267e3!8m2!3d44.8742609!4d-0.5708787!16s%2Fg%2F11rhdtz0_8!19sChIJrTPNQFUpVQ0R42eCcQufS2o?authuser=0&hl=en&rclk=1",
+    "address": "Av. de Laroque, 33300 Bordeaux",
+    "phone": "07 68 90 30 23",
+    "rating": "5.0"
+  },
+  {
+    "name": "AQUITAINE AUTO BORDEAUX",
+    "city": "Bordeaux",
+    "category": "Garage Auto",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/AQUITAINE+AUTO+BORDEAUX/data=!4m7!3m6!1s0xd552f96bd57ab75:0x6c00260a95fabe15!8m2!3d44.8570924!4d-0.5233806!16s%2Fg%2F11r_83mn1r!19sChIJdatXvZYvVQ0RFb76lQomAGw?authuser=0&hl=en&rclk=1",
+    "address": "9 Rue Beaumarchais, 33150 Cenon",
+    "phone": "07 53 53 08 82",
+    "rating": "4.4"
+  },
+  {
+    "name": "Bordeaux-Lac Automobiles",
+    "city": "Bordeaux",
+    "category": "Garage Auto",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/Bordeaux-Lac+Automobiles/data=!4m7!3m6!1s0xd55283087b7dcb1:0x8f7ddfb0a52f7260!8m2!3d44.8876585!4d-0.6012127!16s%2Fg%2F12lrxsq4f!19sChIJsdy3hzAoVQ0RYHIvpbDffY8?authuser=0&hl=en&rclk=1",
+    "address": "7 Rue Serge Dejean, 33520 Bruges",
+    "phone": "05 57 01 10 20",
+    "rating": "3.3"
+  },
+  {
+    "name": "RS Automobiles",
+    "city": "Bordeaux",
+    "category": "Garage Auto",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/RS+Automobiles/data=!4m7!3m6!1s0xd5529e8a56967f5:0x1da2334d6a4d1f89!8m2!3d44.8729888!4d-0.5635606!16s%2Fg%2F11g0hmtcqn!19sChIJ9WdppegpVQ0RiR9Nak0zoh0?authuser=0&hl=en&rclk=1",
+    "address": "34 Rue Francis Garnier, 33300 Bordeaux",
+    "phone": "06 59 24 18 07",
+    "rating": "2.8"
+  },
+  {
+    "name": "AD CARROSSERIE DUMAS",
+    "city": "Bordeaux",
+    "category": "Garage Auto",
+    "has_website": false,
+    "url": "https://www.google.com/maps/place/AD+CARROSSERIE+DUMAS/data=!4m7!3m6!1s0xd5527f602139f03:0x9f92f673a54e3886!8m2!3d44.835376!4d-0.6009458!16s%2Fg%2F1tfsd535!19sChIJA58TAvYnVQ0RhjhOpXP2kp8?authuser=0&hl=en&rclk=1",
+    "address": "37 Rue de Cestas, 33000 Bordeaux",
+    "phone": "05 56 24 25 27",
+    "rating": "4.5"
+  },
+  {
     "name": "LG. PLOMBERIE Paris 13",
     "city": "Paris",
     "category": "Plumber",
