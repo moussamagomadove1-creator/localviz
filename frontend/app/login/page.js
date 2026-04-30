@@ -86,7 +86,7 @@ export default function Login() {
 
         <div className={styles.divider}>OR</div>
 
-        <button className={`btn-secondary ${styles.googleBtn}`}>
+        <button type="button" onClick={async () => await supabase.auth.signInWithOAuth({ provider: 'google' })} className={`btn-secondary ${styles.googleBtn}`}>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M22.56 12.25C22.56 11.47 22.49 10.72 22.36 10H12V14.26H17.92C17.67 15.63 16.89 16.79 15.75 17.55V20.31H19.32C21.41 18.39 22.56 15.58 22.56 12.25Z" fill="#4285F4"/>
             <path d="M12 23C14.97 23 17.46 22.02 19.32 20.31L15.75 17.55C14.74 18.23 13.48 18.63 12 18.63C9.13 18.63 6.69 16.7 5.82 14.09H2.13V16.94C3.96 20.57 7.7 23 12 23Z" fill="#34A853"/>
