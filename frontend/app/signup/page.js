@@ -2,13 +2,15 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { supabase } from '../../utils/supabase/client';
-import styles from './login.module.css';
+import styles from './signup.module.css';
 
-export default function Login() {
+export default function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
+  const [emailSent, setEmailSent] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -18,18 +20,34 @@ export default function Login() {
     });
   }, []);
 
-  const handleLogin = async (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
-    setLoading(true);
     setMessage(null);
 
+    // Validate passwords match
+    if (password !== confirmPassword) {
+      setMessage({ type: 'error', text: 'Passwords do not match.' });
+      return;
+    }
+
+    // Validate password strength
+    if (password.length < 6) {
+      setMessage({ type: 'error', text: 'Password must be at least 6 characters.' });
+      return;
+    }
+
+    setLoading(true);
+
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const { data, error } = await supabase.auth.signUp({ email, password });
+      
       if (error) {
         setMessage({ type: 'error', text: error.message });
+      } else if (data?.user?.identities?.length === 0) {
+        setMessage({ type: 'error', text: 'This email is already registered. Try signing in.' });
       } else {
-        setMessage({ type: 'success', text: 'Welcome back! Redirecting...' });
-        setTimeout(() => window.location.href = '/dashboard', 1000);
+        // Email confirmation is enabled — show the confirmation screen
+        setEmailSent(true);
       }
     } catch (err) {
       console.error(err);
@@ -37,6 +55,37 @@ export default function Login() {
     }
     setLoading(false);
   };
+
+  // Success screen after signup
+  if (emailSent) {
+    return (
+      <div className={styles.loginContainer}>
+        <div className={styles.loginCard}>
+          <div className={styles.successIcon}>
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+          </div>
+          <h1 className={styles.title}>Check your inbox</h1>
+          <p className={styles.subtitle} style={{ marginBottom: '1rem' }}>
+            We just sent a confirmation link to:
+          </p>
+          <div className={styles.emailHighlight}>{email}</div>
+          <p className={styles.subtitle} style={{ marginTop: '1.5rem', lineHeight: '1.6' }}>
+            Click the link in the email to activate your account. 
+            Once confirmed, you can sign in and start scanning.
+          </p>
+          <p className={styles.subtitle} style={{ fontSize: '12px', marginTop: '1rem', opacity: 0.6 }}>
+            Didn't receive anything? Check your spam folder.
+          </p>
+          <Link href="/login" className="btn-primary" style={{ display: 'inline-block', marginTop: '1.5rem', padding: '12px 28px', borderRadius: '999px', fontSize: '14px', textDecoration: 'none' }}>
+            Go to Sign In →
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.loginContainer}>
@@ -47,8 +96,8 @@ export default function Login() {
             LocalViz
           </Link>
         </div>
-        <h1 className={styles.title}>Welcome back</h1>
-        <p className={styles.subtitle}>Sign in to access your LocalViz dashboard.</p>
+        <h1 className={styles.title}>Create your account</h1>
+        <p className={styles.subtitle}>Start finding clients who need a website.</p>
 
         {message && (
           <div style={{
@@ -66,7 +115,7 @@ export default function Login() {
           </div>
         )}
 
-        <form className={styles.form} onSubmit={handleLogin}>
+        <form className={styles.form} onSubmit={handleSignup}>
           <div className={styles.inputGroup}>
             <label className={styles.label} htmlFor="email">Email</label>
             <input 
@@ -85,14 +134,28 @@ export default function Login() {
               id="password"
               type="password" 
               className={styles.input} 
-              placeholder="••••••••"
+              placeholder="Minimum 6 characters"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              minLength={6}
+              required
+            />
+          </div>
+          <div className={styles.inputGroup}>
+            <label className={styles.label} htmlFor="confirmPassword">Confirm Password</label>
+            <input 
+              id="confirmPassword"
+              type="password" 
+              className={styles.input} 
+              placeholder="Re-enter your password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              minLength={6}
               required
             />
           </div>
           <button type="submit" className={`btn-primary ${styles.submitBtn}`} disabled={loading}>
-            {loading ? 'Signing in...' : 'Sign In'}
+            {loading ? 'Creating account...' : 'Create Account'}
           </button>
         </form>
 
@@ -109,8 +172,8 @@ export default function Login() {
         </button>
 
         <p style={{ marginTop: '1.5rem', fontSize: '0.8125rem', color: '#8a8f9c' }}>
-          Don't have an account?{' '}
-          <Link href="/signup" style={{ color: '#d4b46a', textDecoration: 'underline' }}>Create one</Link>
+          Already have an account?{' '}
+          <Link href="/login" style={{ color: '#d4b46a', textDecoration: 'underline' }}>Sign in</Link>
         </p>
       </div>
     </div>

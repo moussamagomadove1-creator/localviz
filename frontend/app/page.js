@@ -66,7 +66,7 @@ export default function Home() {
             ) : (
               <>
                 <Link href="/login" className="btn-secondary">Log in</Link>
-                <Link href="/login" className="btn-primary">Get Started →</Link>
+                <Link href="/signup" className="btn-primary">Get Started →</Link>
               </>
             )}
           </div>
@@ -95,7 +95,7 @@ export default function Home() {
                   Open your Dashboard
                 </Link>
               ) : (
-                <Link href="/login" className="btn-primary" style={{ padding: '13px 24px', fontSize: '15px' }}>
+                <Link href="/signup" className="btn-primary" style={{ padding: '13px 24px', fontSize: '15px' }}>
                   Try it free — 3 scans included
                 </Link>
               )}
