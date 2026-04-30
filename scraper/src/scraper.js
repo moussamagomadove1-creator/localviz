@@ -258,7 +258,7 @@ function saveLeadRealtime(newLead) {
 // ============================================================
 // MAIN SCRAPER
 // ============================================================
-async function scrapeGoogleMaps(city, category, limit = 15) {
+async function scrapeGoogleMaps(city, category, limit = 15, existingLeads = []) {
   const isWholeFrance = city.toLowerCase().trim() === 'france';
   const isServer = !!process.env.PUPPETEER_EXECUTABLE_PATH;
 
@@ -270,7 +270,7 @@ async function scrapeGoogleMaps(city, category, limit = 15) {
   console.log(`\n${'='.repeat(60)}`);
   console.log(`🔍 Starting scrape for: ${category} in ${city}`);
   console.log(`   Sub-zones to search: ${subZones.length}`);
-  console.log(`   Deep scan limit: ${limit} profiles`);
+  console.log(`   Deep scan limit: ${limit} profiles (excluding ${existingLeads.length} already known)`);
   console.log(`   Server mode: ${isServer}`);
   console.log(`${'='.repeat(60)}`);
 
@@ -353,13 +353,18 @@ async function scrapeGoogleMaps(city, category, limit = 15) {
       const zoneBusinesses = await extractBusinessLinks(page);
       let newInZone = 0;
       for (const b of zoneBusinesses) {
-        if (!allBusinesses.has(b.name)) {
+        if (!allBusinesses.has(b.name) && !existingLeads.includes(b.name)) {
           allBusinesses.set(b.name, b);
           newInZone++;
         }
       }
 
       console.log(`   📊 Found ${zoneBusinesses.length} in zone, ${newInZone} new unique. Total unique: ${allBusinesses.size}`);
+
+      if (allBusinesses.size >= limit) {
+        console.log(`   ✅ Target limit of ${limit} reached. Stopping zone exploration early.`);
+        break;
+      }
 
       // Small delay between zones to avoid rate limiting
       if (z < subZones.length - 1) {
@@ -452,7 +457,7 @@ async function scrapeGoogleMaps(city, category, limit = 15) {
 async function runScraperQueue(targets) {
   let total = 0;
   for (const target of targets) {
-    total += await scrapeGoogleMaps(target.city, target.category, target.limit);
+    total += await scrapeGoogleMaps(target.city, target.category, target.limit, target.existingLeads || []);
     if (targets.length > 1) {
       console.log('Waiting before next target...');
       await randomDelay(2000, 5000);

@@ -16,7 +16,9 @@ const Icons = {
   Check: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
   Search: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>,
   Trash: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>,
-  Filter: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+  Filter: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>,
+  Menu: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" x2="21" y1="12" y2="12"/><line x1="3" x2="21" y1="6" y2="6"/><line x1="3" x2="21" y1="18" y2="18"/></svg>,
+  Close: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
 };
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://localviz-scraper.onrender.com';
@@ -28,6 +30,8 @@ export default function Dashboard() {
   const [savedLeads, setSavedLeads] = useState([]);
   const [trashedLeads, setTrashedLeads] = useState([]);
   const [isPro, setIsPro] = useState(false); // Free plan by default
+  const [userId, setUserId] = useState(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const [scanState, setScanState] = useState('idle'); // 'idle' | 'scanning' | 'done'
   const [scanResult, setScanResult] = useState(null);
@@ -45,10 +49,12 @@ export default function Dashboard() {
   const [scraping, setScraping] = useState(false);
   const [scrapeMsg, setScrapeMsg] = useState('');
 
-  const fetchRealData = async (isRefresh = false) => {
+  const fetchRealData = async (isRefresh = false, uid = null) => {
     try {
+      const activeUser = uid || userId;
+      const url = activeUser ? `${API_URL}/api/leads?userId=${encodeURIComponent(activeUser)}` : `${API_URL}/api/leads`;
       // Try fetching from the backend API first
-      const apiRes = await fetch(`${API_URL}/api/leads`).catch(() => null);
+      const apiRes = await fetch(url).catch(() => null);
       if (apiRes && apiRes.ok) {
         const apiData = await apiRes.json();
         if (apiData && apiData.length > 0) {
@@ -78,11 +84,14 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
+    let currentUid = null;
     // Check if user is admin to grant Pro access
     const userStr = localStorage.getItem('localviz_user');
     if (userStr) {
       try {
         const user = JSON.parse(userStr);
+        currentUid = user.email;
+        setUserId(user.email);
         if (user.email === 'admin@localviz.com' || user.role === 'admin') {
           setIsPro(true);
         }
@@ -105,7 +114,7 @@ export default function Dashboard() {
       } catch (e) {}
     }
 
-    fetchRealData();
+    fetchRealData(false, currentUid);
   }, []);
 
   const viewResults = async () => {
@@ -193,7 +202,7 @@ export default function Dashboard() {
       const res = await fetch(`${API_URL}/api/scrape`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ city: scrapeCity, category: scrapeCategory, limit: parseInt(scrapeLimit) })
+        body: JSON.stringify({ city: scrapeCity, category: scrapeCategory, limit: parseInt(scrapeLimit), userId: userId })
       });
 
       if (!res.ok) {
@@ -535,21 +544,28 @@ export default function Dashboard() {
 
   return (
     <div className={styles.dashboardLayout}>
-      <aside className={styles.sidebar}>
-        <Link href="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+      <div className={styles.mobileHeader}>
+        <div className={styles.logo}>Local<span className="text-gradient">Viz</span></div>
+        <button className={styles.mobileMenuBtn} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+          {isMobileMenuOpen ? <Icons.Close /> : <Icons.Menu />}
+        </button>
+      </div>
+
+      <aside className={`${styles.sidebar} ${isMobileMenuOpen ? styles.sidebarOpen : ''}`}>
+        <Link href="/" style={{ textDecoration: 'none', color: 'inherit' }} className={styles.desktopLogo}>
           <div className={styles.logo}>Local<span className="text-gradient">Viz</span></div>
         </Link>
         <nav className={styles.navMenu}>
-          <div className={`${styles.navItem} ${currentView === 'overview' ? styles.active : ''}`} onClick={() => setCurrentView('overview')}>
+          <div className={`${styles.navItem} ${currentView === 'overview' ? styles.active : ''}`} onClick={() => {setCurrentView('overview'); setIsMobileMenuOpen(false);}}>
             <Icons.Home /> Overview
           </div>
-          <div className={`${styles.navItem} ${currentView === 'saved' ? styles.active : ''}`} onClick={() => setCurrentView('saved')}>
+          <div className={`${styles.navItem} ${currentView === 'saved' ? styles.active : ''}`} onClick={() => {setCurrentView('saved'); setIsMobileMenuOpen(false);}}>
             <Icons.Bookmark /> My Saved Leads <span style={{ marginLeft: 'auto', background: 'rgba(255,255,255,0.1)', padding: '2px 8px', borderRadius: '10px', fontSize: '0.75rem' }}>{savedLeads.length}</span>
           </div>
-          <div className={`${styles.navItem} ${currentView === 'settings' ? styles.active : ''}`} onClick={() => setCurrentView('settings')}>
+          <div className={`${styles.navItem} ${currentView === 'settings' ? styles.active : ''}`} onClick={() => {setCurrentView('settings'); setIsMobileMenuOpen(false);}}>
             <Icons.Settings /> Scraping Engine
           </div>
-          <div className={`${styles.navItem} ${currentView === 'billing' ? styles.active : ''}`} onClick={() => setCurrentView('billing')}>
+          <div className={`${styles.navItem} ${currentView === 'billing' ? styles.active : ''}`} onClick={() => {setCurrentView('billing'); setIsMobileMenuOpen(false);}}>
             <Icons.CreditCard /> Billing
           </div>
           <Link href="/" className={styles.navItem} style={{ marginTop: 'auto', opacity: 0.7 }}>

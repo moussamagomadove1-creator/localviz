@@ -41,7 +41,8 @@ async function checkForJobs() {
     const count = await runScraperQueue([{ 
       city: job.city, 
       category: job.category, 
-      limit: job.limit 
+      limit: job.limit,
+      existingLeads: job.existingLeads || []
     }]);
     
     // Read the leads that were saved
@@ -49,8 +50,8 @@ async function checkForJobs() {
     const demoPath = path.join(__dirname, '../frontend/public/demo_leads.json');
     if (fs.existsSync(demoPath)) {
       const allLeads = JSON.parse(fs.readFileSync(demoPath, 'utf8'));
-      // Only send leads matching this job's city
-      leads = allLeads.filter(l => l.city.toLowerCase() === job.city.toLowerCase());
+      // Only send leads matching this job's city, and exclude ones that were already existing
+      leads = allLeads.filter(l => l.city.toLowerCase() === job.city.toLowerCase() && !(job.existingLeads || []).includes(l.name));
     }
     
     // Report completion + send leads back

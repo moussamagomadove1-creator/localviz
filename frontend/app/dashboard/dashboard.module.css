@@ -630,48 +630,70 @@
   to { background: rgba(16, 185, 129, 0.08); }
 }
 
+/* ===== MOBILE HEADER & SIDEBAR TOGGLE ===== */
+.mobileHeader {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  background: rgba(12, 14, 21, 0.95);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.mobileMenuBtn {
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+}
+
+.desktopLogo {
+  display: block;
+}
+
 /* ===== RESPONSIVE MOBILE DASHBOARD ===== */
 @media (max-width: 840px) {
   .dashboardLayout {
     flex-direction: column;
   }
 
-  .sidebar {
-    width: 100%;
-    padding: 1.5rem;
-    border-right: none;
-    border-bottom: 1px solid rgba(255,255,255,.08);
-    position: sticky;
-    top: 0;
-    background: rgba(12, 14, 21, 0.95);
+  .mobileHeader {
+    display: flex;
   }
 
-  .logo {
-    margin-bottom: 1.5rem;
-    text-align: center;
+  .desktopLogo {
+    display: none;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 280px;
+    height: 100vh;
+    padding: 1.5rem;
+    border-right: 1px solid rgba(255,255,255,.08);
+    background: rgba(12, 14, 21, 0.98);
+    z-index: 50;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .sidebarOpen {
+    transform: translateX(0);
   }
 
   .navMenu {
-    flex-direction: row;
-    overflow-x: auto;
+    margin-top: 2rem;
     gap: 1rem;
-    padding-bottom: 0.5rem;
-    scrollbar-width: none; /* Firefox */
-  }
-  
-  .navMenu::-webkit-scrollbar {
-    display: none; /* Chrome/Safari */
-  }
-
-  .navItem {
-    white-space: nowrap;
-    padding: 0.5rem 1rem;
-  }
-  
-  .navItem.active {
-    border-left: none;
-    border-bottom: 3px solid #d4b46a;
-    background: linear-gradient(0deg, rgba(212,180,106,.15) 0%, transparent 100%);
   }
 
   .mainContent {

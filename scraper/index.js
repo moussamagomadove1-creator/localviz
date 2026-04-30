@@ -29,21 +29,28 @@ let jobIdCounter = 1;
 
 // Website calls this to start a scan → creates a job for the local worker
 app.post('/api/scrape', (req, res) => {
-  const { city, category, limit } = req.body;
+  const { city, category, limit, userId } = req.body;
   if (!city || !category) {
     return res.status(400).json({ error: 'City and category are required' });
   }
+  
+  // Find existing leads for this user to avoid duplicates
+  const userLeads = userId ? leadsStore.filter(l => l.userId === userId) : [];
+  const existingNames = userLeads.map(l => l.name);
+
   const job = {
     id: jobIdCounter++,
     city,
     category,
     limit: limit || 15,
+    userId: userId || 'anonymous',
+    existingLeads: existingNames,
     status: 'pending',    // pending → running → done
     count: 0,
     createdAt: new Date()
   };
   jobQueue.push(job);
-  console.log(`📋 Job #${job.id} created: ${category} in ${city} (limit: ${job.limit})`);
+  console.log(`📋 Job #${job.id} created: ${category} in ${city} (limit: ${job.limit}, user: ${job.userId})`);
   res.json({ message: 'Scan queued', jobId: job.id, status: 'pending' });
 });
 
@@ -70,11 +77,12 @@ app.post('/api/jobs/:id/complete', (req, res) => {
   job.count = count || 0;
   console.log(`✅ Job #${job.id} completed: ${job.count} leads found`);
 
-  // Add leads to store
+  // Add leads to store, attaching the userId
   if (leads && Array.isArray(leads)) {
     let added = 0;
     for (const lead of leads) {
-      if (!leadsStore.some(e => e.name === lead.name && e.city === lead.city)) {
+      if (!leadsStore.some(e => e.name === lead.name && e.city === lead.city && e.userId === job.userId)) {
+        lead.userId = job.userId;
         leadsStore.unshift(lead);
         added++;
       }
@@ -84,7 +92,7 @@ app.post('/api/jobs/:id/complete', (req, res) => {
         fs.writeFileSync(path.join(__dirname, 'leads_data.json'), JSON.stringify(leadsStore, null, 2));
       } catch(e) {}
     }
-    console.log(`💾 ${added} new leads saved (total: ${leadsStore.length})`);
+    console.log(`💾 ${added} new leads saved for user ${job.userId} (total: ${leadsStore.length})`);
   }
 
   res.json({ message: 'Job completed', count: job.count });
@@ -100,7 +108,13 @@ app.get('/api/jobs/:id/status', (req, res) => {
 
 // API route to get all leads
 app.get('/api/leads', (req, res) => {
-  res.json(leadsStore);
+  const userId = req.query.userId;
+  if (userId) {
+    res.json(leadsStore.filter(l => l.userId === userId));
+  } else {
+    // Legacy support or admin
+    res.json(leadsStore);
+  }
 });
 
 // API route to receive leads pushed from local scraper
