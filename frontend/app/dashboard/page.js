@@ -132,10 +132,17 @@ export default function Dashboard() {
       } catch (e) {}
     }
 
-    // Check if extension is installed
-    setTimeout(() => {
-      setHasExtension(!!document.getElementById('localviz-extension-installed'));
-    }, 500);
+    // Check if extension is installed (retry a few times as content script may load late)
+    const checkExt = (attempts = 0) => {
+      if (document.getElementById('localviz-extension-installed')) {
+        setHasExtension(true);
+      } else if (attempts < 5) {
+        setTimeout(() => checkExt(attempts + 1), 500);
+      } else {
+        setHasExtension(false);
+      }
+    };
+    checkExt();
 
     // Listen for messages from the Chrome Extension
     const handleMessage = async (event) => {
@@ -156,9 +163,17 @@ export default function Dashboard() {
         // Save to Supabase directly
         const { data: { session } } = await supabase.auth.getSession();
         if (session && leads.length > 0) {
-          const userLeads = leads.map(l => ({ ...l, user_id: session.user.id }));
-          const { error } = await supabase.from('leads').upsert(userLeads, { onConflict: 'name,city', ignoreDuplicates: true });
-          if (error) console.error("Error saving leads", error);
+          const userLeads = leads.map(l => ({
+            user_id: session.user.id,
+            name: l.name,
+            city: l.city || 'N/A',
+            category: l.category || 'N/A',
+            phone: l.phone || null,
+            rating: l.rating || null,
+            url: l.url || null
+          }));
+          const { error } = await supabase.from('leads').insert(userLeads);
+          if (error) console.error('Error saving leads:', error);
         }
         
         fetchRealData(true);
