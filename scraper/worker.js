@@ -28,15 +28,19 @@ console.log(`\n💡 Now go to https://localviz.vercel.app/dashboard`);
 console.log(`   Click "Scraping Engine" and launch a scan!`);
 console.log(`   This worker will execute it automatically.\n`);
 
+let isProcessing = false;
+
 async function checkForJobs() {
+  if (isProcessing) return; // Prevent overlapping jobs
   try {
     const res = await fetch(`${ONLINE_API}/api/jobs/pending`, {
       headers: { 'x-worker-key': WORKER_SECRET }
     });
     const job = await res.json();
     
-    if (!job) return; // No pending jobs
+    if (!job || !job.id || job.error) return; // No valid pending jobs
     
+    isProcessing = true;
     console.log(`\n🚀 JOB RECEIVED #${job.id}: ${job.category} in ${job.city} (limit: ${job.limit})`);
     console.log(`   Executing with full local power...\n`);
     
@@ -76,6 +80,8 @@ async function checkForJobs() {
     if (!e.message.includes('fetch failed')) {
       console.error('Worker error:', e.message);
     }
+  } finally {
+    isProcessing = false;
   }
 }
 
