@@ -50,6 +50,10 @@ export default function Dashboard() {
   const [scraping, setScraping] = useState(false);
   const [scrapeMsg, setScrapeMsg] = useState('');
 
+  // SECURITY: These limits are enforced in JS (not just HTML attributes)
+  const MAX_SCAN_LIMIT = 100;
+  const MIN_SCAN_LIMIT = 1;
+
   const fetchRealData = async (isRefresh = false, uid = null) => {
     try {
       const activeUser = uid || userId;
@@ -181,6 +185,25 @@ export default function Dashboard() {
 
   const handleScrape = async (e) => {
     e.preventDefault();
+    
+    // SECURITY: Enforce limit in JS code (can't be bypassed via F12)
+    const enforcedLimit = Math.min(Math.max(parseInt(scrapeLimit) || 15, MIN_SCAN_LIMIT), MAX_SCAN_LIMIT);
+    if (parseInt(scrapeLimit) !== enforcedLimit) {
+      setScrapeLimit(enforcedLimit);
+      setScrapeMsg(`⚠️ Limit adjusted to ${enforcedLimit} (max allowed: ${MAX_SCAN_LIMIT}).`);
+      return;
+    }
+    
+    // SECURITY: Also validate city/category are not empty or too long
+    if (!scrapeCity.trim() || !scrapeCategory.trim()) {
+      setScrapeMsg('⚠️ City and category are required.');
+      return;
+    }
+    if (scrapeCity.length > 100 || scrapeCategory.length > 100) {
+      setScrapeMsg('⚠️ Input too long (max 100 characters).');
+      return;
+    }
+    
     setScraping(true);
     setScanState('scanning');
     setScanResult(null);
@@ -209,7 +232,7 @@ export default function Dashboard() {
       const res = await fetch(`${API_URL}/api/scrape`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ city: scrapeCity, category: scrapeCategory, limit: parseInt(scrapeLimit), userId: userId })
+        body: JSON.stringify({ city: scrapeCity.trim(), category: scrapeCategory.trim(), limit: enforcedLimit, userId: userId })
       });
 
       if (!res.ok) {
@@ -338,9 +361,15 @@ export default function Dashboard() {
                       type="number" 
                       className={styles.searchInput} 
                       value={scrapeLimit}
-                      onChange={(e) => setScrapeLimit(e.target.value)}
-                      min="1"
-                      max="100"
+                      onChange={(e) => {
+                        // SECURITY: Clamp value in JS, not just HTML
+                        const val = parseInt(e.target.value);
+                        if (isNaN(val) || val < MIN_SCAN_LIMIT) setScrapeLimit(MIN_SCAN_LIMIT);
+                        else if (val > MAX_SCAN_LIMIT) setScrapeLimit(MAX_SCAN_LIMIT);
+                        else setScrapeLimit(val);
+                      }}
+                      min={MIN_SCAN_LIMIT}
+                      max={MAX_SCAN_LIMIT}
                       required
                       style={{ width: '100%' }}
                     />
