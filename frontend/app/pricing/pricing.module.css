@@ -1,0 +1,181 @@
+.pricingContainer {
+  min-height: 100vh;
+  padding: 120px 24px 80px;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.navBar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  background: rgba(7,8,12,.72);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.navInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 1.25rem;
+  letter-spacing: -.01em;
+}
+
+.logoMark {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #d4b46a, #7c5cff);
+  box-shadow: 0 0 24px rgba(212,180,106,.35);
+  display: inline-block;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 12px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: #d4b46a;
+  margin-bottom: 16px;
+}
+
+.title {
+  font-size: clamp(32px, 4.5vw, 52px);
+  letter-spacing: -.03em;
+  line-height: 1.05;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.subtitle {
+  color: #8a8f9c;
+  font-size: 17px;
+  margin-bottom: 64px;
+}
+
+.pricingGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  text-align: left;
+}
+
+.pricingCard {
+  padding: 32px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: all .3s ease;
+}
+
+.pricingCard:hover {
+  transform: translateY(-3px);
+}
+
+.popularCard {
+  border-color: rgba(212,180,106,.4);
+  background: linear-gradient(180deg, rgba(212,180,106,.08), rgba(124,92,255,.04));
+  transform: scale(1.02);
+}
+
+.popularCard:hover {
+  transform: scale(1.02) translateY(-3px);
+}
+
+.popularBadge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, #f6e2a8, #d4b46a);
+  color: #1a1408;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 999px;
+  letter-spacing: .05em;
+}
+
+.planName {
+  font-size: 18px;
+  letter-spacing: -.01em;
+  margin-bottom: 4px;
+}
+
+.planPrice {
+  font-size: 48px;
+  font-weight: 600;
+  letter-spacing: -.03em;
+  margin: 18px 0 8px;
+  display: flex;
+  align-items: baseline;
+}
+
+.planPeriod {
+  font-size: 15px;
+  color: #8a8f9c;
+  font-weight: 400;
+  margin-left: 4px;
+}
+
+.planDesc {
+  color: #8a8f9c;
+  font-size: 14px;
+  margin-bottom: 24px;
+  min-height: 40px;
+}
+
+.featureList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 8px 0 28px;
+  font-size: 14px;
+  color: #8a8f9c;
+  flex-grow: 1;
+}
+
+.featureItem {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.featureIcon {
+  color: #d4b46a;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.actionBtn {
+  width: 100%;
+  justify-content: center;
+  margin-top: auto;
+  text-align: center;
+  padding: 12px 18px;
+  border-radius: 999px;
+}
+
+@media (max-width: 840px) {
+  .pricingGrid { grid-template-columns: 1fr }
+  .popularCard { transform: none }
+  .popularCard:hover { transform: translateY(-3px) }
+}
