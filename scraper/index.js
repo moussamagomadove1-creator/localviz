@@ -129,13 +129,15 @@ app.post('/api/scrape', requireAuth, async (req, res) => {
   const cleanCity = sanitize(city, 100);
   const cleanCategory = sanitize(category, 100);
   
-  // SECURITY: Cap the limit to prevent abuse (max 200 profiles per scan)
-  const MAX_SCAN_LIMIT = 200;
+  const isPro = req.authenticatedUser.email === 'admin@localviz.com';
+  
+  // SECURITY: Cap the limit to prevent abuse
+  const MAX_SCAN_LIMIT = isPro ? 200 : 50;
   const cleanLimit = Math.min(Math.max(parseInt(limit) || 15, 1), MAX_SCAN_LIMIT);
   
-  // SECURITY: Per-user scan cooldown & daily limit
+  // SECURITY: Per-user scan cooldown & limits
   const now = Date.now();
-  const history = userScanHistory.get(userId) || { lastScan: 0, dailyCount: 0, dayStart: now };
+  const history = userScanHistory.get(userId) || { lastScan: 0, dailyCount: 0, dayStart: now, totalCount: 0 };
   
   // Reset daily count if new day
   if (now - history.dayStart > 24 * 60 * 60 * 1000) {
@@ -153,10 +155,16 @@ app.post('/api/scrape', requireAuth, async (req, res) => {
   if (history.dailyCount >= MAX_DAILY_SCANS) {
     return res.status(429).json({ error: `Daily scan limit reached (${MAX_DAILY_SCANS}). Try again tomorrow.` });
   }
+
+  // Check total scans for Free plan
+  if (!isPro && history.totalCount >= 3) {
+    return res.status(403).json({ error: `Free plan limit reached (3/3 scans). Please upgrade to Pro to continue scanning.` });
+  }
   
   // Update history
   history.lastScan = now;
   history.dailyCount++;
+  history.totalCount++;
   userScanHistory.set(userId, history);
   
   // Find existing leads for this user to avoid duplicates by querying Supabase

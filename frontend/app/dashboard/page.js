@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { supabase } from '../../utils/supabase/client';
 import styles from './dashboard.module.css';
 
@@ -51,7 +52,7 @@ export default function Dashboard() {
   const [scrapeMsg, setScrapeMsg] = useState('');
 
   // SECURITY: These limits are enforced in JS (not just HTML attributes)
-  const MAX_SCAN_LIMIT = 100;
+  const MAX_SCAN_LIMIT = isPro ? 200 : 50;
   const MIN_SCAN_LIMIT = 1;
 
   const fetchRealData = async (isRefresh = false, uid = null) => {
@@ -422,7 +423,7 @@ export default function Dashboard() {
                 <>
                   <div className={styles.resultNumber}>{scanResult}</div>
                   <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>Qualified Leads Found!</h3>
-                  <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>We successfully extracted these businesses. They have been added to your LocalViz database.</p>
+                  <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>We successfully extracted these businesses. They have been added to your NoSite database.</p>
                 </>
               ) : (
                 <>
@@ -608,7 +609,10 @@ export default function Dashboard() {
 
       <aside className={`${styles.sidebar} ${isMobileMenuOpen ? styles.sidebarOpen : ''}`}>
         <Link href="/" style={{ textDecoration: 'none', color: 'inherit' }} className={styles.desktopLogo}>
-          <div className={styles.logo}>Local<span className="text-gradient">Viz</span></div>
+          <div className={styles.logo}>
+            <Image src="/SaasLogo.png" alt="NoSite logo" width={52} height={52} priority />
+            <span>NoSite</span>
+          </div>
         </Link>
         <nav className={styles.navMenu}>
           <div className={`${styles.navItem} ${currentView === 'overview' ? styles.active : ''}`} onClick={() => {setCurrentView('overview'); setIsMobileMenuOpen(false);}}>

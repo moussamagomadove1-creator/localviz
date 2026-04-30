@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { supabase } from '../utils/supabase/client';
 import Link from 'next/link';
+import Image from 'next/image';
 import styles from './page.module.css';
 
 export default function Home() {
@@ -52,8 +53,8 @@ export default function Home() {
         <div className={styles.navInner}>
           <Link href="/" style={{ textDecoration: 'none', color: 'inherit' }}>
             <div className={styles.logo}>
-              <span className={styles.logoMark}></span>
-              LocalViz
+              <Image src="/SaasLogo.png" alt="NoSite logo" width={52} height={52} priority />
+              <span>NoSite</span>
             </div>
           </Link>
           <div className={styles.navLinks}>
@@ -241,7 +242,7 @@ export default function Home() {
               <div className={styles.plan}>
                 <h3 className={styles.planName}>Free</h3>
                 <div className={styles.planPrice}>$0<small className={styles.planPriceSub}>/forever</small></div>
-                <p className={styles.planTag}>Try LocalViz risk-free</p>
+                <p className={styles.planTag}>Try NoSite risk-free</p>
                 <ul className={styles.planFeatures}>
                   <li>5 leads visible per scan</li>
                   <li>Up to 20 profiles scanned</li>
@@ -309,10 +310,10 @@ export default function Home() {
       <footer className={styles.footer}>
         <div className={styles.footInner}>
           <div className={styles.logo}>
-            <span className={styles.logoMark}></span>
-            LocalViz
+            <Image src="/SaasLogo.png" alt="NoSite logo" width={52} height={52} />
+            <span>NoSite</span>
           </div>
-          <div>© 2026 LocalViz. All rights reserved.</div>
+          <div>© 2026 NoSite. All rights reserved.</div>
           <div className={styles.footLinks}>
             <a href="#">Privacy</a>
             <a href="#">Terms</a>

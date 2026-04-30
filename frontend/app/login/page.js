@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { supabase } from '../../utils/supabase/client';
 import styles from './login.module.css';
 
@@ -43,12 +44,12 @@ export default function Login() {
       <div className={styles.loginCard}>
         <div className={styles.logo}>
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none', color: 'inherit' }}>
-            <span className={styles.logoMark}></span>
-            LocalViz
+            <Image src="/SaasLogo.png" alt="NoSite logo" width={64} height={64} priority />
+            <span>NoSite</span>
           </Link>
         </div>
         <h1 className={styles.title}>Welcome back</h1>
-        <p className={styles.subtitle}>Sign in to access your LocalViz dashboard.</p>
+        <p className={styles.subtitle}>Sign in to access your NoSite dashboard.</p>
 
         {message && (
           <div style={{

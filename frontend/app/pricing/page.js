@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
 import styles from './pricing.module.css';
 
 export default function Pricing() {
@@ -14,8 +15,8 @@ export default function Pricing() {
         <div className={styles.navInner}>
           <Link href="/" style={{ textDecoration: 'none', color: 'inherit' }}>
             <div className={styles.logo}>
-              <span className={styles.logoMark}></span>
-              LocalViz
+              <Image src="/SaasLogo.png" alt="NoSite logo" width={52} height={52} priority />
+              <span>NoSite</span>
             </div>
           </Link>
         </div>
@@ -30,7 +31,7 @@ export default function Pricing() {
           <div className={styles.pricingCard}>
             <h3 className={styles.planName}>Free</h3>
             <div className={styles.planPrice}>$0<span className={styles.planPeriod}>/forever</span></div>
-            <p className={styles.planDesc}>Try LocalViz risk-free and find your first client.</p>
+            <p className={styles.planDesc}>Try NoSite risk-free and find your first client.</p>
             
             <ul className={styles.featureList}>
               <li className={styles.featureItem}>
