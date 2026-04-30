@@ -6,8 +6,78 @@ const { createClient } = require('@supabase/supabase-js');
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-app.use(cors());
-app.use(express.json({ limit: '5mb' }));
+// ============================================================
+// SECURITY: CORS - Only allow requests from our frontend
+// ============================================================
+const ALLOWED_ORIGINS = [
+  'https://localviz.vercel.app',
+  'http://localhost:3000'
+];
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (mobile apps, curl, worker)
+    if (!origin || ALLOWED_ORIGINS.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
+
+app.use(express.json({ limit: '2mb' }));
+
+// ============================================================
+// SECURITY: Rate Limiting (per IP)
+// ============================================================
+const rateLimitMap = new Map();
+const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
+const RATE_LIMIT_MAX = 20; // max 20 requests per minute per IP
+
+function rateLimit(req, res, next) {
+  const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+  const now = Date.now();
+  if (!rateLimitMap.has(ip)) rateLimitMap.set(ip, []);
+  const timestamps = rateLimitMap.get(ip).filter(t => now - t < RATE_LIMIT_WINDOW);
+  if (timestamps.length >= RATE_LIMIT_MAX) {
+    return res.status(429).json({ error: 'Too many requests. Please wait a moment.' });
+  }
+  timestamps.push(now);
+  rateLimitMap.set(ip, timestamps);
+  next();
+}
+app.use(rateLimit);
+
+// Cleanup rate limit map every 5 minutes
+setInterval(() => {
+  const now = Date.now();
+  for (const [ip, timestamps] of rateLimitMap.entries()) {
+    const valid = timestamps.filter(t => now - t < RATE_LIMIT_WINDOW);
+    if (valid.length === 0) rateLimitMap.delete(ip);
+    else rateLimitMap.set(ip, valid);
+  }
+}, 5 * 60 * 1000);
+
+// ============================================================
+// SECURITY: Worker API Key (shared secret between server & worker)
+// ============================================================
+const WORKER_SECRET = process.env.WORKER_SECRET || 'localviz-worker-secret-2026';
+
+function requireWorkerAuth(req, res, next) {
+  const token = req.headers['x-worker-key'];
+  if (token !== WORKER_SECRET) {
+    return res.status(403).json({ error: 'Unauthorized: invalid worker key' });
+  }
+  next();
+}
+
+// ============================================================
+// SECURITY: Input sanitization helper
+// ============================================================
+function sanitize(str, maxLen = 200) {
+  if (typeof str !== 'string') return '';
+  return str.replace(/[<>"'`;]/g, '').trim().slice(0, maxLen);
+}
 
 // Initialize Supabase
 const supabase = createClient(
@@ -24,9 +94,24 @@ let jobIdCounter = 1;
 // Website calls this to start a scan → creates a job for the local worker
 app.post('/api/scrape', async (req, res) => {
   const { city, category, limit, userId } = req.body;
+  
+  // SECURITY: Validate required fields
   if (!city || !category) {
     return res.status(400).json({ error: 'City and category are required' });
   }
+  
+  // SECURITY: Validate userId format (UUID)
+  if (!userId || typeof userId !== 'string' || !/^[0-9a-f-]{36}$/i.test(userId)) {
+    return res.status(400).json({ error: 'Valid userId is required' });
+  }
+
+  // SECURITY: Sanitize inputs
+  const cleanCity = sanitize(city, 100);
+  const cleanCategory = sanitize(category, 100);
+  
+  // SECURITY: Cap the limit to prevent abuse (max 200 profiles per scan)
+  const MAX_SCAN_LIMIT = 200;
+  const cleanLimit = Math.min(Math.max(parseInt(limit) || 15, 1), MAX_SCAN_LIMIT);
   
   // Find existing leads for this user to avoid duplicates by querying Supabase
   let existingNames = [];
@@ -37,22 +122,22 @@ app.post('/api/scrape', async (req, res) => {
 
   const job = {
     id: jobIdCounter++,
-    city,
-    category,
-    limit: limit || 15,
-    userId: userId || 'anonymous',
+    city: cleanCity,
+    category: cleanCategory,
+    limit: cleanLimit,
+    userId: userId,
     existingLeads: existingNames,
     status: 'pending',    // pending → running → done
     count: 0,
     createdAt: new Date()
   };
   jobQueue.push(job);
-  console.log(`📋 Job #${job.id} created: ${category} in ${city} (limit: ${job.limit}, user: ${job.userId})`);
+  console.log(`📋 Job #${job.id} created: ${cleanCategory} in ${cleanCity} (limit: ${cleanLimit}, user: ${userId})`);
   res.json({ message: 'Scan queued', jobId: job.id, status: 'pending' });
 });
 
-// Local worker polls this to get pending jobs
-app.get('/api/jobs/pending', (req, res) => {
+// Local worker polls this to get pending jobs (PROTECTED)
+app.get('/api/jobs/pending', requireWorkerAuth, (req, res) => {
   const pending = jobQueue.find(j => j.status === 'pending');
   if (pending) {
     pending.status = 'running';
@@ -64,7 +149,7 @@ app.get('/api/jobs/pending', (req, res) => {
 });
 
 // Local worker calls this when a job is done
-app.post('/api/jobs/:id/complete', async (req, res) => {
+app.post('/api/jobs/:id/complete', requireWorkerAuth, async (req, res) => {
   const jobId = parseInt(req.params.id);
   const { count, leads } = req.body;
   const job = jobQueue.find(j => j.id === jobId);
@@ -117,28 +202,20 @@ app.get('/api/leads', async (req, res) => {
   }
 });
 
-// API route to receive leads pushed from local scraper
-app.post('/api/leads/push', (req, res) => {
-  const { leads } = req.body;
-  if (!leads || !Array.isArray(leads)) {
-    return res.status(400).json({ error: 'leads array is required' });
-  }
-  let added = 0;
-  for (const lead of leads) {
-    if (!leadsStore.some(e => e.name === lead.name && e.city === lead.city)) {
-      leadsStore.unshift(lead);
-      added++;
-    }
-  }
-  try {
-    fs.writeFileSync(path.join(__dirname, 'leads_data.json'), JSON.stringify(leadsStore, null, 2));
-  } catch(e) {}
-  res.json({ message: `${added} new leads added`, total: leadsStore.length });
+// Health check (no sensitive info exposed)
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date(), pendingJobs: jobQueue.filter(j => j.status === 'pending').length });
 });
 
-// Health check
-app.get('/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date(), leadsCount: leadsStore.length, pendingJobs: jobQueue.filter(j => j.status === 'pending').length });
+// SECURITY: Catch-all for undefined routes
+app.use((req, res) => {
+  res.status(404).json({ error: 'Not found' });
+});
+
+// SECURITY: Global error handler (never leak stack traces)
+app.use((err, req, res, next) => {
+  console.error('Server error:', err.message);
+  res.status(500).json({ error: 'Internal server error' });
 });
 
 app.listen(PORT, () => {

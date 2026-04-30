@@ -17,6 +17,7 @@ const path = require('path');
 
 const ONLINE_API = 'https://localviz-scraper.onrender.com';
 const POLL_INTERVAL = 5000; // Check every 5 seconds
+const WORKER_SECRET = process.env.WORKER_SECRET || 'localviz-worker-secret-2026';
 
 console.log(`\n${'='.repeat(50)}`);
 console.log(`🖥️  LOCAL WORKER STARTED`);
@@ -29,7 +30,9 @@ console.log(`   This worker will execute it automatically.\n`);
 
 async function checkForJobs() {
   try {
-    const res = await fetch(`${ONLINE_API}/api/jobs/pending`);
+    const res = await fetch(`${ONLINE_API}/api/jobs/pending`, {
+      headers: { 'x-worker-key': WORKER_SECRET }
+    });
     const job = await res.json();
     
     if (!job) return; // No pending jobs
@@ -58,7 +61,10 @@ async function checkForJobs() {
     console.log(`\n☁️  Pushing ${leads.length} leads to online server...`);
     const completeRes = await fetch(`${ONLINE_API}/api/jobs/${job.id}/complete`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'x-worker-key': WORKER_SECRET
+      },
       body: JSON.stringify({ count, leads })
     });
     const result = await completeRes.json();

@@ -92,7 +92,7 @@ export default function Dashboard() {
         return;
       }
       const user = session.user;
-      currentUid = user.id;
+      let currentUid = user.id;
       setUserId(user.id);
       
       // Check Pro status if needed (mocked for now, or check user metadata)
